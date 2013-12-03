@@ -1,22 +1,16 @@
 Targeting performance of monthly cash payments at multidimensional poverty in Russia in 2000 - 2011
 ========================================================
-author: Markus Kainu
-date: May 18, 2013 
+author: 1st RLMS-HSE conference at HSE Moscow in May 18, 2013
+transition: fade
+css: ../../../template/rpresentation/slides.css
 
-1st RLMS-HSE conference at HSE Moscow
-
-Check out the analysis at [research.muuankarski.org/rlms/papers/conference2013/](http://research.muuankarski.org/rlms/papers/conference2013/)
-
-<!--
-cd ~/workspace/russia/rlms/papers/conference2013
-lftp -u np16003 -e "put hseRlms2013Slides.html;quit" ftp://np16003@www.muuankarski.org/domains/muuankarski.org/public_html/research/rlms/papers/conference2013/slides
-
--->
+**Markus Kainu**
+*PhD student, [Aleksanteri institute, University of Helsinki](http://helsinki.fi/aleksanteri) </br>*
 
 kuvio
 ========================================================
 title:false
-![](slides/figures/crm-logo_small.png)
+![](figure/crm-logo_small.png)
 
 [www.helsinki.fi/aleksanteri/crm/](http://www.helsinki.fi/aleksanteri/crm/)
 
@@ -53,13 +47,13 @@ Theoretical framing
 kuvio2
 ========================================================
 title:false
-![Development of average wages, average pension, minimun wage and subsistence minimum in 2000 - 2011 (roubles per month) (Source: Rosstat 2012)](analysis/figures_moscow/figure/macroplot_slide1.png)
+![Development of average wages, average pension, minimun wage and subsistence minimum in 2000 - 2011 (roubles per month) (Source: Rosstat 2012)](figure/macroplot_slide1.png)
 
 kuvio2
 ========================================================
 title:false
 
-![Development of average wages, average pension, minimun wage and subsistence minimum in 2000 - 2011 (roubles per month) (Source: Rosstat 2012)](analysis/figures_moscow/figure/macroplot_slide2.png)
+![Development of average wages, average pension, minimun wage and subsistence minimum in 2000 - 2011 (roubles per month) (Source: Rosstat 2012)](figure/macroplot_slide2.png)
 
 1. Monetization reform
 ========================================================
@@ -161,12 +155,12 @@ print.xtable(xtable(tbl), type="html", include.rownames=FALSE)
 
 Income poverty in 2000 - 2011 (Source: RLMS-HSE)
 ========================================================
-![](analysis/figures_moscow/figure/povplot.png)
+![](figure/povplot.png)
 
 
 
 ========================================================
-![Income poverty rate (number) and coverage rate (size of bubble) by psu in 2011. Source: RLMS-HSE](analysis/figures_moscow/figure/mapplot1.png)
+![Income poverty rate (number) and coverage rate (size of bubble) by psu in 2011. Source: RLMS-HSE](figure/mapplot1.png)
 
 
 b) Materially deprived households
@@ -192,11 +186,11 @@ Household is categorized as **consumption poor** if they unvoluntarily lack **th
 
 Material deprivation in 2000 - 2011. Individual items in colors and joint indicator in black. (Source: RLMS-HSE
 ========================================================
-![)](analysis/figures_moscow/figure/materplot.png)
+![)](figure/materplot.png)
 
 Material deprivation rate (number) and coverage rate (size of bubble) by psu in 2011. Source: RLMS-HSE
 ========================================================
-![](analysis/figures_moscow/figure/mapplot3.png)
+![](figure/mapplot3.png)
 
 Consumption poverty
 ========================================================
@@ -220,12 +214,12 @@ Household is defined as consumption poor if a member of household haven't been a
 
 Consumption deprivation in 2000 - 2011. Individual items in colors and joint indicator in black. (Source: RLMS-HSE)
 ========================================================
-![](analysis/figures_moscow/figure/consplot.png)
+![](figure/consplot.png)
 
 
 Consumption poverty rate (number) and coverage rate (size of bubble) by psu in 2011. Source: RLMS-HSE
 ========================================================
-![](analysis/figures_moscow/figure/mapplot2.png)
+![](figure/mapplot2.png)
 
 Income poor households
 ========================================================
@@ -251,7 +245,7 @@ Mean and median of MCP benefit in RLMS-HSE dataset (Source: RLMS-HSE)
 <center>
 
 ```{rtable, results='asis', echo=FALSE, eval=TRUE}
-load("~/workspace/russia/rlms/papers/conference2013/data/mcp.RData")
+load("~/workspace/russia/rlms/monetisation/data/mcp.RData")
 library(xtable)
 tbl <- xtable(cdata, caption="Table: Mean and median of MCP benefit in RLMS-HSE dataset (Source: RLMS-HSE)")
 print.xtable(tbl, type="html", include.rownames=FALSE, comment=FALSE, caption.placement="top")
@@ -280,7 +274,7 @@ print.xtable(tbl, type="html", include.rownames=FALSE, comment=FALSE, caption.pl
 
 Operationalisation of multidimensional poverty
 ========================================================
-![](slides/figures/rlmsvenn5.png)
+![](figures/rlmsvenn5.png)
 
 
 Targeting performance of MCP
@@ -342,12 +336,12 @@ title: false
 
 Multidimensional poverty
 ========================================================
-![Multidimensional poverty (Source: RLMS-HSE)](analysis/figures_moscow/figure/multidimplot.png)
+![Multidimensional poverty (Source: RLMS-HSE)](figure/multidimplot.png)
 
 
 Multidimensional poverty
 ========================================================
-![Multidimensional poverty in regions (households with two or three deprivations pooled) (Source: RLMS-HSE)](analysis/figures_moscow/figure/multidimplotpsu.png)
+![Multidimensional poverty in regions (households with two or three deprivations pooled) (Source: RLMS-HSE)](figure/multidimplotpsu.png)
 
 
 
@@ -357,7 +351,7 @@ Multidimensional poverty
 <center>
 
 ```{rtable2, results='asis', echo=FALSE, eval=TRUE}
-load("~/workspace/russia/rlms/papers/conference2013/data/error2.RData")
+load("~/workspace/russia/rlms/monetisation/data/error2.RData")
 library(xtable)
 dft <- subset(df.error2.w, Measure == 'coverage.rate')
 dft$Measure <- NULL
@@ -370,27 +364,27 @@ print.xtable(tbl, type="html", include.rownames=FALSE, comment=FALSE, caption.pl
 Targeting errors
 ========================================================
 title:false
-![Coverage rates of MCP benefit at individual and overlapping dimensions of poverty measure (Source: RLMS-HSE)](analysis/figures_moscow/figure/covplot.png)
+![Coverage rates of MCP benefit at individual and overlapping dimensions of poverty measure (Source: RLMS-HSE)](figure/covplot.png)
 
 Targeting errors
 ========================================================
 title:false
-![Rates of poor households and rates of poor households covered by MCP benefits in three individual dimensions and the joint dimension (Source: RLMS-HSE)](analysis/figures_moscow/figure/coverageplot_slide1.png)
+![Rates of poor households and rates of poor households covered by MCP benefits in three individual dimensions and the joint dimension (Source: RLMS-HSE)](figure/coverageplot_slide1.png)
 
 Targeting errors
 ========================================================
 title:false
-![Rates of poor households and rates of poor households covered by MCP benefits in three individual dimensions and the joint dimension (Source: RLMS-HSE)](analysis/figures_moscow/figure/coverageplot_slide2.png)
+![Rates of poor households and rates of poor households covered by MCP benefits in three individual dimensions and the joint dimension (Source: RLMS-HSE)](figure/coverageplot_slide2.png)
 
 Targeting errors
 ========================================================
 title:false
-![Coverage rate vs. median benefit level of MCP by regions in 2011 (Source: RLMS-HSE)](analysis/figures_moscow/figure/covbenplot_slide2.png)
+![Coverage rate vs. median benefit level of MCP by regions in 2011 (Source: RLMS-HSE)](figure/covbenplot_slide2.png)
 
 Targeting errors
 ========================================================
 title:false
-![Coverage rate vs. median benefit level of MCP by regions in 2005 to 2011 (Source: RLMS-HSE)](analysis/figures_moscow/figure/covbenplot_slide.png)
+![Coverage rate vs. median benefit level of MCP by regions in 2005 to 2011 (Source: RLMS-HSE)](figure/covbenplot_slide.png)
 
 Targeting errors
 ========================================================
@@ -398,7 +392,7 @@ Targeting errors
 <center>
 
 ```{rtable1, results='asis', echo=FALSE, eval=TRUE}
-load("~/workspace/russia/rlms/papers/conference2013/data/error1.RData")
+load("~/workspace/russia/rlms/monetisation/data/error1.RData")
 library(xtable)
 tbl <- xtable(df.error1, caption="Table: Type 1 error (leakage) of MCP (Source: RLMS-HSE)", digits=1)
 print.xtable(tbl, type="html", include.rownames=FALSE, comment=FALSE, caption.placement="top")
@@ -433,7 +427,7 @@ print.xtable(tbl, type="html", include.rownames=FALSE, comment=FALSE, caption.pl
 
 Targeting performance
 ========================================================
-![Coady-Grosh-Hoddinott indicator of targeting performance of MCP benefits on multidimensional poverty. Source: RLMS-HSE](analysis/figures_moscow/figure/cghplot.png)
+![Coady-Grosh-Hoddinott indicator of targeting performance of MCP benefits on multidimensional poverty. Source: RLMS-HSE](figure/cghplot.png)
 
 4. Conclusions
 ========================================================
