@@ -4,7 +4,9 @@
 # Content
 
 ## Abstract
-- [Abstract in html](abstract.html)
+| Event | html | pdf | Rmd |
+| --- | --- | --- | --- |
+| For Moscow 2013 | [html](abstract/abstract.html) | [pdf](abstract/abstract.pdf) | [Rmd](abstract/abstract.Rmd)
 
 ## Analysis
 
