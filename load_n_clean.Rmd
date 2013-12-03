@@ -1,0 +1,69 @@
+- [back to index](index.html)
+
+# Load the SPSS-datasets and save them in .RData format.
+
+Make sure you change the file paths to match you system..
+
+
+```{r, eval=FALSE}
+library(foreign)
+
+## Representative sample
+
+# r20_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/20-я волна/ДОМОХОЗЯЙСТВА/r20h_os23c.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r19_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/19-я волна/ДОМОХОЗЯЙСТВА/r19h_os23a.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r18_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/18-я волна/ДОМОХОЗЯЙСТВА/r18h_os23.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r17_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/17-я волна/ДОМОХОЗЯЙСТВА/r17h_os23.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r16_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/16-я волна/ДОМОХОЗЯЙСТВА/r16h_os23.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r15_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/15-я волна/ДОМОХОЗЯЙСТВА/r15h_os23.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r14_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/14-я волна/ДОМОХОЗЯЙСТВА/r14h_os23.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r13_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/13-я волна/ДОМОХОЗЯЙСТВА/r13h_os23.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r12_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/12-я волна/ДОМОХОЗЯЙСТВА/r12h_os23.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r11_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/11-я волна/ДОМОХОЗЯЙСТВА/r11h_os23.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r10_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/10-я волна/ДОМОХОЗЯЙСТВА/r10h_os23.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# r09_hh_rep <- read.spss("/media/baikal/Asiakirjat/data/rlms/Репрезентативная выборка/9-я волна/ДОМОХОЗЯЙСТВА/r09h_os23.sav", 
+#                         to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+# 
+
+## whole sample
+
+
+r20_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/20-я волна/ДОМОХОЗЯЙСТВА/r20hall23c.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r19_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/19-я волна/ДОМОХОЗЯЙСТВА/r19hall23e.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r18_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/18-я волна/ДОМОХОЗЯЙСТВА/r18hall23.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r17_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/17-я волна/ДОМОХОЗЯЙСТВА/r17hall23.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r16_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/16-я волна/ДОМОХОЗЯЙСТВА/r16hall23.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r15_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/15-я волна/ДОМОХОЗЯЙСТВА/r15hall23.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r14_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/14-я волна/ДОМОХОЗЯЙСТВА/r14hall23.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r13_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/13-я волна/ДОМОХОЗЯЙСТВА/r13hall23.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r12_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/12-я волна/ДОМОХОЗЯЙСТВА/r12hall23.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r11_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/11-я волна/ДОМОХОЗЯЙСТВА/r11hall23.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r10_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/10-я волна/ДОМОХОЗЯЙСТВА/r10hall23.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+r09_hh_rep <- read.spss("/media/aurelius/baikal/Asiakirjat/data/rlms/Полная выборка/9-я волна/ДОМОХОЗЯЙСТВА/r09hall23.sav", 
+                        to.data.frame=TRUE, use.value.labels=FALSE, reencode="UTF8")
+
+
+save.image("~/workspace/russia/rlms/monetisation/data/rlms.RData")
+```

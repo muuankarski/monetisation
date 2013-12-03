@@ -1,0 +1,387 @@
+- [back to index](index.html)
+
+<h1 class="title">Income & income poverty rounds 9 - 21, years 2000 - 2011</h1>
+
+
+```{rincomecomparecompopts, echo=FALSE}
+opts_chunk$set(echo=TRUE, dev='png', eval=TRUE, cache=FALSE, fig.height=8, fig.width=12, message=FALSE, warning=FALSE)
+```
+
+
+```{rincomecomparecomploaddata}
+library(ggplot2)
+library(plyr)
+library(survey)
+
+load("~/workspace/russia/rlms/monetisation/data/rlms.RData")
+
+df09 <- subset(r09_hh_rep, select=c("ef14","e_nfm","psu","e_hhwgt","eredid_h"))
+df10 <- subset(r10_hh_rep, select=c("ff14","f_nfm","psu","f_hhwgt","fredid_h"))
+df11 <- subset(r11_hh_rep, select=c("gf14","g_nfm","psu","g_hhwgt","gredid_h"))
+df12 <- subset(r12_hh_rep, select=c("hf14","h_nfm","psu","h_hhwgt","hredid_h"))
+df13 <- subset(r13_hh_rep, select=c("if14","i_nfm","psu","i_hhwgt","iredid_h"))
+df14 <- subset(r14_hh_rep, select=c("jf14","j_nfm","psu","j_hhwgt","jredid_h"))
+df15 <- subset(r15_hh_rep, select=c("kf14","k_nfm","psu","k_hhwgt","kredid_h"))
+df16 <- subset(r16_hh_rep, select=c("lf14","l_nfm","psu","l_hhwgt","lredid_h"))
+df17 <- subset(r17_hh_rep, select=c("mf14","m_nfm","psu","m_hhwgt","mredid_h"))
+df18 <- subset(r18_hh_rep, select=c("nf14","n_nfm","psu","n_hhwgt","nredid_h"))
+df19 <- subset(r19_hh_rep, select=c("of14","o_nfm","psu","o_hhwgt","oredid_h"))
+df20 <- subset(r20_hh_rep, select=c("pf14","p_nfm","psu","p_hhwgt","predid_h"))
+
+names(df09) <- c("income","hh_size","psu","weight","id")
+names(df10) <- c("income","hh_size","psu","weight","id")
+names(df11) <- c("income","hh_size","psu","weight","id")
+names(df12) <- c("income","hh_size","psu","weight","id")
+names(df13) <- c("income","hh_size","psu","weight","id")
+names(df14) <- c("income","hh_size","psu","weight","id")
+names(df15) <- c("income","hh_size","psu","weight","id")
+names(df16) <- c("income","hh_size","psu","weight","id")
+names(df17) <- c("income","hh_size","psu","weight","id")
+names(df18) <- c("income","hh_size","psu","weight","id")
+names(df19) <- c("income","hh_size","psu","weight","id")
+names(df20) <- c("income","hh_size","psu","weight","id")
+
+
+df09$round <- 09
+df09$year <- 2000
+
+df10$round <- 10
+df10$year <- 2001
+
+df11$round <- 11
+df11$year <- 2002
+
+df12$round <- 12
+df12$year <- 2003
+
+df13$round <- 13
+df13$year <- 2004
+
+df14$round <- 14
+df14$year <- 2005
+
+df15$round <- 15
+df15$year <- 2006
+
+df16$round <- 16
+df16$year <- 2007
+
+df17$round <- 17
+df17$year <- 2008
+
+df18$round <- 18
+df18$year <- 2009
+
+df19$round <- 19
+df19$year <- 2010
+
+df20$round <- 20
+df20$year <- 2011
+
+df <- rbind(df09,df10,df11,df12,df13,df14,df15,df16,df17,df18,df19,df20)
+
+df$hh_size_eq <- sqrt(df$hh_size)
+df$income_eq <- df$income/df$hh_size_eq
+
+
+df$psu <- factor(df$psu)
+df$psu_txt[df$psu == 1] <- "St. Petersburg"
+df$psu_txt[df$psu == 2] <- "Moscow"
+df$psu_txt[df$psu == 3] <- "Moscow region"
+df$psu_txt[df$psu == 4] <- "Komi Republic, Syktyvkar"
+df$psu_txt[df$psu == 5] <- "Komi Republic, Usinsk area"
+df$psu_txt[df$psu == 6] <- "Leningrad Region., Volosovskiy area"
+df$psu_txt[df$psu == 7] <- "Smolensk"
+df$psu_txt[df$psu == 8] <- "Kalinin region. Rzhev area"
+df$psu_txt[df$psu == 9] <- "Tula"
+df$psu_txt[df$psu == 10] <- "Kaluga region. Kuibyshev district"
+df$psu_txt[df$psu == 11] <- "Nizhny Novgorod"
+df$psu_txt[df$psu == 12] <- "Chuvash Republic, Shumerlya area"
+df$psu_txt[df$psu == 13] <- "Penza region, district Zemetchinsky"
+df$psu_txt[df$psu == 14] <- "Lipetsk"
+df$psu_txt[df$psu == 15] <- "Tambov., Uvarovo area"
+df$psu_txt[df$psu == 16] <- "Kazan"
+df$psu_txt[df$psu == 17] <- "Saratov"
+df$psu_txt[df$psu == 18] <- "Saratov. Wolski area"
+df$psu_txt[df$psu == 19] <- "Volgograd region. Rudnyansky area"
+df$psu_txt[df$psu == 20] <- "Kabardino-Balkaria"
+df$psu_txt[df$psu == 21] <- "Rostov region., G.Bataysk"
+df$psu_txt[df$psu == 22] <- "Krasnodar"
+df$psu_txt[df$psu == 23] <- "Stavropol, St. George area"
+df$psu_txt[df$psu == 24] <- "Krasnodar region, district Kuschevsky"
+df$psu_txt[df$psu == 25] <- "Chelyabinsk"
+df$psu_txt[df$psu == 26] <- "Kurgan"
+df$psu_txt[df$psu == 27] <- "Udmurt Republic Glazov District"
+df$psu_txt[df$psu == 28] <- "Orenburg region., Orsk"
+df$psu_txt[df$psu == 29] <- "Perm region., Solikamsk area"
+df$psu_txt[df$psu == 30] <- "Chelyabinsk region"
+df$psu_txt[df$psu == 31] <- "Tomsk"
+df$psu_txt[df$psu == 32] <- "Khanty-Mansiysk, Tyumen"
+df$psu_txt[df$psu == 33] <- "Altay, Biysk district"
+df$psu_txt[df$psu == 34] <- "Altay, Kurinsky area"
+df$psu_txt[df$psu == 35] <- "Krasnoyarsk"
+df$psu_txt[df$psu == 36] <- "Vladivostok"
+df$psu_txt[df$psu == 37] <- "Krasnoyarsk, Nazarovsky area"
+df$psu_txt[df$psu == 38] <- "Amur Region, Tambov region"
+df$psu_txt[df$psu == 39] <- "Novosibirsk Region, Berd region"
+
+df$psu_txt <- factor(df$psu_txt)
+
+save(df, file="../data/df_income.RData")
+```
+
+# Income distribution
+
+```{rincomecomparecompincome}
+df$year <- factor(df$year)
+df <- subset(df, income < 999999)
+ggplot(df, aes(x=income, fill=year)) +
+  geom_density(alpha=.4) +
+  labs(title="Distribution of household cash income (limit 0 - 200000)") +
+  coord_cartesian(xlim=c(0,100000))
+
+ggplot(df, aes(x=income_eq, fill=year)) +
+  geom_density(alpha=.4) +
+  labs(title="Distribution of household cash income  (limit 0 - 200000)") +
+  coord_cartesian(xlim=c(0,100000))
+```
+
+
+## By household size
+
+```{rincomecomparecomphhsize}
+df$hh_size <- factor(df$hh_size)
+ggplot(df, aes(y=income_eq, x=hh_size)) +
+  geom_boxplot() +
+  labs(title="Distribution of EQUIVALIZED household cash income by number of household members") +
+  coord_cartesian(ylim=c(0,45000),xlim=c(0,9)) +
+  facet_grid(year~.)
+```
+
+## By region
+
+```{rincomecomparecompregion}
+cdata <- ddply(df, .(year,psu_txt), summarise, 
+               median = median(income_eq))
+cdata <- cdata[with(cdata, order(median)), ]
+#df$psu_txt <- factor(df$psu_txt, levels=cdata$psu_txt)
+ggplot(df, aes(x=psu_txt, y=income_eq, fill=year)) +
+  geom_boxplot() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  labs(title="Distribution of equivalized household cash income by number of household members") +
+  coord_cartesian(ylim=c(0,45000)) + 
+  facet_grid(year~.)
+```
+
+## Change in regional median incomes
+
+```{rincomecomparecomp_medianincome}
+cnames <- subset(cdata, year==2011)
+ggplot(cdata, aes(x=year,y=median,color=psu_txt,group=psu_txt)) +
+  geom_line() + geom_point() +
+  theme(legend.position="none") +
+  geom_text(data=cnames, aes(x=year,y=median,label=psu_txt)) +
+  labs(title="Change in equivalent monthly huosehold income")
+
+library(reshape2)
+
+cdata.w <- dcast(cdata, psu_txt ~ year, value.var="median")
+names(cdata.w) <- c("psu_txt","y2000","y2001","y2002","y2003","y2004","y2005","y2006","y2007","y2008","y2009","y2010","y2011")
+cdata.w$begin <- cdata.w$y2000/cdata.w$y2000*100
+cdata.w$change2001 <- cdata.w$y2001/cdata.w$y2000*100
+cdata.w$change2002 <- cdata.w$y2002/cdata.w$y2000*100
+cdata.w$change2003 <- cdata.w$y2003/cdata.w$y2000*100
+cdata.w$change2004 <- cdata.w$y2004/cdata.w$y2000*100
+cdata.w$change2005 <- cdata.w$y2005/cdata.w$y2000*100
+cdata.w$change2006 <- cdata.w$y2006/cdata.w$y2000*100
+cdata.w$change2007 <- cdata.w$y2007/cdata.w$y2000*100
+cdata.w$change2008 <- cdata.w$y2008/cdata.w$y2000*100
+cdata.w$change2009 <- cdata.w$y2009/cdata.w$y2000*100
+cdata.w$change2010 <- cdata.w$y2010/cdata.w$y2000*100
+cdata.w$change2011 <- cdata.w$y2011/cdata.w$y2000*100
+
+cdata.w2 <- cdata.w[,c(1,14:25)]
+cdata.l <- melt(cdata.w2, id.vars="psu_txt")
+
+cdata.l$year[cdata.l$variable == 'begin'] <- 2000
+library(stringr)
+cdata.l$year <- str_replace_all(cdata.l$variable, "change", "")
+
+cdata.l$year <- factor(cdata.l$year)
+cdata.l$year <- as.numeric(levels(cdata.l$year))[cdata.l$year]
+
+cnames <- subset(cdata.l, year==2011)
+ggplot(cdata.l, aes(x=year,y=value,color=psu_txt,group=psu_txt)) +
+  geom_line() + geom_point() +
+  theme(legend.position="none") +
+  geom_text(data=cnames, aes(x=year,y=value,label=psu_txt)) +
+  labs(title="relative change in equivalent montly household income between measurements (2000 = 100)")
+```
+
+```{rincomecomparecompincome_tables, results='asis'}
+library(xtable)
+xtbl <- xtable(cdata.w, caption="the absolute median incomes and relative changes (same data as above in figures)")
+print.xtable(xtbl, type="html")
+```
+
+# Poverty rates
+
+## National rates using national RELATIVE threshold
+
+```{rincomecomparer20pov2, results='asis'}
+library(laeken)
+arpr2000 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2000), 
+    p = 0.6, na.rm = TRUE)
+arpr2001 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2001), 
+    p = 0.6, na.rm = TRUE)
+arpr2002 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2002), 
+    p = 0.6, na.rm = TRUE)
+arpr2003 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2003), 
+    p = 0.6, na.rm = TRUE)
+arpr2004 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2004), 
+    p = 0.6, na.rm = TRUE)
+arpr2005 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2005), 
+    p = 0.6, na.rm = TRUE)
+arpr2006 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2006), 
+    p = 0.6, na.rm = TRUE)
+arpr2007 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2007), 
+    p = 0.6, na.rm = TRUE)
+arpr2008 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2008), 
+    p = 0.6, na.rm = TRUE)
+arpr2009 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2009), 
+    p = 0.6, na.rm = TRUE)
+arpr2010 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2010), 
+    p = 0.6, na.rm = TRUE)
+arpr2011 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2011), 
+    p = 0.6, na.rm = TRUE)
+
+
+poverty.rates <- unlist(c(arpr2000$value,arpr2001$value,arpr2002$value,arpr2003$value,arpr2004$value,arpr2005$value,arpr2006$value,arpr2007$value,arpr2008$value,arpr2009$value,arpr2010$value,arpr2011$value))
+year <- 2000:2011
+povdata <- data.frame(year,poverty.rates)
+povdata$group <- "group"
+povdata$poverty.rates <- round(povdata$poverty.rates, 1)
+ggplot(povdata, aes(x=year, y=poverty.rates, group=group, label=poverty.rates)) +
+  geom_point() + geom_path() + geom_text(vjust=-1)+
+  labs(title="Poverty rates using 60 % median")
+
+```
+
+
+## Regional rates using national threshold
+
+```{rincomecomparerelative}
+
+arpr2000 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2000), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2001 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2001), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2002 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2002), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2003 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2003), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2004 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2004), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2005 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2005), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2006 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2006), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2007 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2007), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2008 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2008), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2009 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2009), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2010 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2010), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+arpr2011 <- arpr("income_eq", weights = "weight", data = subset(df, year == 2011), 
+    breakdown = "psu_txt", p = 0.6, na.rm = TRUE)
+
+df.arpr2000 <- arpr2000$valueByStratum
+df.arpr2001 <- arpr2001$valueByStratum
+df.arpr2002 <- arpr2002$valueByStratum
+df.arpr2003 <- arpr2003$valueByStratum
+df.arpr2004 <- arpr2004$valueByStratum
+df.arpr2005 <- arpr2005$valueByStratum
+df.arpr2006 <- arpr2006$valueByStratum
+df.arpr2007 <- arpr2007$valueByStratum
+df.arpr2008 <- arpr2008$valueByStratum
+df.arpr2009 <- arpr2009$valueByStratum
+df.arpr2010 <- arpr2010$valueByStratum
+df.arpr2011 <- arpr2011$valueByStratum
+
+df.arpr2000$year <- 2000
+df.arpr2001$year <- 2001
+df.arpr2002$year <- 2002
+df.arpr2003$year <- 2003
+df.arpr2004$year <- 2004
+df.arpr2005$year <- 2005
+df.arpr2006$year <- 2006
+df.arpr2007$year <- 2007
+df.arpr2008$year <- 2008
+df.arpr2009$year <- 2009
+df.arpr2010$year <- 2010
+df.arpr2011$year <- 2011
+
+df.pov.reg <- rbind(df.arpr2000,df.arpr2001,df.arpr2002,df.arpr2003,df.arpr2004,df.arpr2005,df.arpr2006,df.arpr2007,df.arpr2008,df.arpr2009,df.arpr2010,df.arpr2011)
+
+df.pov.reg$value <- round(df.pov.reg$value, 1)
+
+cnames <- subset(df.pov.reg, year == 2011)
+ggplot(df.pov.reg, aes(x=year, y=value, group=stratum, color=stratum, label=value)) +
+  geom_point() + geom_path() + geom_text(vjust=-1, size=2) +
+  geom_path(data=povdata, aes(x=year, y=poverty.rates, group=group, label=poverty.rates), color="black", linetype="dashed", size=1) +
+  labs(title="Poverty rates using 60 % median by regions (Dashed black line showing the country level)") +
+  geom_text(data=cnames, aes(x=year, y=value, group=stratum, color=stratum, label=stratum)) +
+  theme(legend.position="none")
+```
+
+## Using Rosstat subsistence minimum thresholds
+
+```{rincomecomparesubsistence}
+# copied form here: http://www.gks.ru/bgd/regl/b08_12/IssWWW.exe/stg/d01/07-11.htm
+# and here: http://www.gks.ru/bgd/regl/b12_12/IssWWW.exe/stg/d01/07-11.htm
+
+subsistence <- c(1210,1500,1808,2112,2376,3018,3422,3847,4593,5153,5688,6369)
+year <- 2000:2011
+povrates.rt <- data.frame(year,subsistence)
+df <- merge(df,povrates.rt,by="year")
+df$rt.poor[df$income_eq <= df$subsistence] <- "poor"
+df$rt.poor[df$income_eq > df$subsistence] <- "non.poor"
+df$rt.poor <- factor(df$rt.poor)
+
+library(survey)
+d.df <- svydesign(id = ~id, weights = ~weight, data = df)
+
+t2 <- data.frame(prop.table(svytable(~rt.poor + year, d.df), 2) * 100)
+t3 <- subset(t2, rt.poor %in% "poor")
+t3$Freq <- round(t3$Freq, 1)
+t3$group <- "group"
+
+ggplot(t3, aes(x=year, y=Freq, label=Freq, group=group)) +
+  geom_point() + geom_path() + geom_text(vjust=-1) +
+  labs(title="Poverty rates using subsistence minimum")
+
+
+t2 <- data.frame(svytable(~rt.poor + psu_txt + year, d.df))
+t2.w <- dcast(t2, psu_txt + year ~ rt.poor, value.var="Freq")
+t2.w$poverty.rate <- t2.w$poor / (t2.w$non.poor + t2.w$poor) * 100
+t2.w$poverty.rate <- round(t2.w$poverty.rate, 1)
+
+cnames <- subset(t2.w, year == 2011)
+ggplot(t2.w, aes(x=year, y=poverty.rate, group=psu_txt, color=psu_txt, label=poverty.rate)) +
+  geom_point() + geom_path() + geom_text(vjust=-1, size=2) +
+  geom_path(data=t3, aes(x=year, y=Freq, label=Freq, group=group), color="black", linetype="dashed", size=1) +
+  labs(title="Poverty rates using subsistence minimum by regions (Dashed black line showing the country level)") +
+  geom_text(data=cnames, aes(x=year, y=poverty.rate, group=psu_txt, color=psu_txt, label=psu_txt)) +
+  theme(legend.position="none")
+
+```
+
+
+
+
+
+
+
+

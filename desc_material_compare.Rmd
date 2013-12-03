@@ -1,0 +1,507 @@
+- [back to index](index.html)
+
+<h1 class="title">Material deprivation rounds 9 - 21, years 2000 - 2011</h1>
+
+
+
+```{rmaterial_comparer20loaddata}
+library(ggplot2)
+library(plyr)
+library(survey)
+library(car)
+library(reshape2)
+
+load("~/workspace/russia/rlms/monetisation/data/rlms.RData")
+
+```
+
+```{rmaterial_comparer20opts, echo=FALSE}
+opts_chunk$set(echo=TRUE, dev='png', eval=TRUE, cache=TRUE, fig.height=8, fig.width=12, message=FALSE, warning=FALSE)
+```
+
+# Items of material deprivation
+
+My measure of material deprivation consists of six items.
+
+1. tv
+2. water supply
+3. hot water
+4. sewage
+5. computer
+
+Phone and fridge left out due to odd changes in coding over time.
+
+Below are the incidence rates of each deprivation at the household level. Composite measure is constructed further below.
+
+```{rmaterial_comparesubset, results='asis'}
+
+df09 <- subset(r09_hh_rep, 
+               select=c("ef14","e_nfm","psu","e_hhwgt","eredid_h",
+                         "ec9.1a","ec9.5a",
+                         "ec7.2","ec7.3","ec7.5","ec7.6",
+                        "ec9.6.2a"))
+df10 <- subset(r10_hh_rep, 
+               select=c("ff14","f_nfm","psu","f_hhwgt","fredid_h",
+                         "fc9.1a","fc9.5a",
+                         "fc7.2","fc7.3","fc7.5","fc7.6",
+                        "fc9.6.2a"))
+df11 <- subset(r11_hh_rep, 
+               select=c("gf14","g_nfm","psu","g_hhwgt","gredid_h",
+                         "gc9.1a","gc9.5a",
+                         "gc7.2","gc7.3","gc7.5","gc7.6",
+                        "gc9.6.2a"))
+df12 <- subset(r12_hh_rep, 
+               select=c("hf14","h_nfm","psu","h_hhwgt","hredid_h",
+                         "hc9.1a","hc9.5a",
+                         "hc7.2","hc7.3","hc7.5","hc7.6",
+                        "hc9.6.2a"))
+df13 <- subset(r13_hh_rep, 
+               select=c("if14","i_nfm","psu","i_hhwgt","iredid_h",
+                         "ic9.1a","ic9.5a",
+                         "ic7.2","ic7.3","ic7.5","ic7.6",
+                        "ic9.6.2a"))
+df14 <- subset(r14_hh_rep, 
+               select=c("jf14","j_nfm","psu","j_hhwgt","jredid_h",
+                         "jc9.1a","jc9.5a",
+                         "jc7.2","jc7.3","jc7.5","jc7.6",
+                        "jc9.6.2a"))
+df15 <- subset(r15_hh_rep, 
+               select=c("kf14","k_nfm","psu","k_hhwgt","kredid_h",
+                         "kc9.1.1a","kc9.5a",
+                         "kc7.2","kc7.3","kc7.5","kc7.6",
+                        "kc9.6.2a"))
+df16 <- subset(r16_hh_rep, 
+               select=c("lf14","l_nfm","psu","l_hhwgt","lredid_h",
+                         "lc9.1.1a","lc9.5a",
+                         "lc7.2","lc7.3","lc7.5","lc7.6",
+                        "lc9.6.2a"))
+df17 <- subset(r17_hh_rep, 
+               select=c("mf14","m_nfm","psu","m_hhwgt","mredid_h",
+                         "mc9.1.1a","mc9.5a",
+                         "mc7.2","mc7.3","mc7.5","mc7.6",
+                        "mc9.6.2a"))
+df18 <- subset(r18_hh_rep, 
+               select=c("nf14","n_nfm","psu","n_hhwgt","nredid_h",
+                         "nc9.1.1a","nc9.5.1a","nc9.5.2a",
+                         "nc7.2","nc7.3","nc7.5","nc7.6",
+                        "nc9.621a","nc9.622a"))
+df19 <- subset(r19_hh_rep,
+               select=c("of14","o_nfm","psu","o_hhwgt","oredid_h",
+                         "oc9.1.1a","oc9.5.1a","oc9.5.2a",
+                         "oc7.2","oc7.3","oc7.5","oc7.6",
+                        "oc9.621a","oc9.622a"))
+df20 <- subset(r20_hh_rep, 
+               select=c("pf14","p_nfm","psu","p_hhwgt",
+                        "predid_h",
+                         "pc9.1.1a", # Do you have a refrigerator that does not require defrosting (NO FROST)?
+                         "pc9.5.1a", #  Do you have a color TV, not flat?
+                         "pc9.5.2a", # pc9.5.2a Do you have a flat TV - plasma or
+                         "pc7.2", # in your house has central water supply?
+                         "pc7.3", # in your home has hot water?
+                         "pc7.5", # in your house in a centralized sewerage system?
+                         "pc7.6", # Do you have a phone in the house (not a cell)?
+                         "pc9.621a", # desktop computer
+                         "pc9.622a" # laptop computer
+                        ))
+
+# Some variables do change over time. Fridge is changed from jc9.1a to jc9.1.1a (NO FROST) for round 15.
+# Television mc9.5a is divided in two variables non-flat "pc9.5.1a", and flat "pc9.5.2a", for round 18. 
+
+# To harmonize things we must do the following 
+# (not really needed as variable name will be changed to fridge soon anyway..)
+
+# fridge
+library(plyr)
+df15 <- rename(df15, c("kc9.1.1a" = "c9.1a"))
+df16 <- rename(df16, c("lc9.1.1a" = "c9.1a"))
+df17 <- rename(df17, c("mc9.1.1a" = "c9.1a"))
+df18 <- rename(df18, c("nc9.1.1a" = "c9.1a"))
+df19 <- rename(df19, c("oc9.1.1a" = "c9.1a"))
+df20 <- rename(df20, c("pc9.1.1a" = "c9.1a"))
+
+#######################################
+#######################################
+
+# tv
+
+# round 18
+df18$c9.5.1a.rec <- recode(df18$nc9.5.1a, "99999997:99999999=NA")
+df18$c9.5.2a.rec <- recode(df18$nc9.5.2a, "99999997:99999999=NA")
+
+df18$c9.5a[df18$c9.5.1a.rec == 1] <- 1
+df18$c9.5a[df18$c9.5.2a.rec == 1] <- 1
+df18$c9.5a[df18$c9.5.1a.rec != 1 & df18$c9.5.2a.rec != 1] <- 2
+
+df18$nc9.5.1a <- NULL
+df18$nc9.5.2a <- NULL
+df18$c9.5.1a.rec <- NULL
+df18$c9.5.2a.rec <- NULL
+
+# Change the order to allow change names and rbind later
+df18 <- df18[,c(1,2,3,4,5,6,13,7,8,9,10,11,12)]
+
+# round 19
+df19$c9.5.1a.rec <- recode(df19$oc9.5.1a, "99999997:99999999=NA")
+df19$c9.5.2a.rec <- recode(df19$oc9.5.2a, "99999997:99999999=NA")
+
+df19$c9.5a[df19$c9.5.1a.rec == 1] <- 1
+df19$c9.5a[df19$c9.5.2a.rec == 1] <- 1
+df19$c9.5a[df19$c9.5.1a.rec != 1 & df19$c9.5.2a.rec != 1] <- 2
+
+df19$oc9.5.1a <- NULL
+df19$oc9.5.2a <- NULL
+df19$c9.5.1a.rec <- NULL
+df19$c9.5.2a.rec <- NULL
+
+# Change the order to allow rbind later
+df19 <- df19[,c(1,2,3,4,5,6,13,7,8,9,10,11,12)]
+
+
+# round 20
+df20$c9.5.1a.rec <- recode(df20$pc9.5.1a, "99999997:99999999=NA")
+df20$c9.5.2a.rec <- recode(df20$pc9.5.2a, "99999997:99999999=NA")
+
+df20$c9.5a[df20$c9.5.1a.rec == 1] <- 1
+df20$c9.5a[df20$c9.5.2a.rec == 1] <- 1
+df20$c9.5a[df20$c9.5.1a.rec != 1 & df20$c9.5.2a.rec != 1] <- 2
+
+df20$pc9.5.1a <- NULL
+df20$pc9.5.2a <- NULL
+df20$c9.5.1a.rec <- NULL
+df20$c9.5.2a.rec <- NULL
+
+# Change the order to allow rbind later
+df20 <- df20[,c(1,2,3,4,5,6,13,7,8,9,10,11,12)]
+
+#######################################
+#######################################
+
+# Computer
+
+# round 18
+
+df18$c9.621a.rec <- recode(df18$nc9.621a, "99999997:99999999=NA")
+df18$c9.622a.rec <- recode(df18$nc9.622a, "99999997:99999999=NA")
+
+df18$c9.6.2a[df18$c9.621a.rec == 1] <- 1
+df18$c9.6.2a[df18$c9.622a.rec == 1] <- 1
+df18$c9.6.2a[df18$c9.621a.rec != 1 & df18$c9.622a.rec != 1] <- 2
+
+df18$nc9.621a <- NULL
+df18$nc9.622a <- NULL
+df18$c9.621a.rec <- NULL
+df18$c9.622a.rec <- NULL
+
+# round 19
+
+df19$c9.621a.rec <- recode(df19$oc9.621a, "99999997:99999999=NA")
+df19$c9.622a.rec <- recode(df19$oc9.622a, "99999997:99999999=NA")
+
+df19$c9.6.2a[df19$c9.621a.rec == 1] <- 1
+df19$c9.6.2a[df19$c9.622a.rec == 1] <- 1
+df19$c9.6.2a[df19$c9.621a.rec != 1 & df19$c9.622a.rec != 1] <- 2
+
+df19$oc9.621a <- NULL
+df19$oc9.622a <- NULL
+df19$c9.621a.rec <- NULL
+df19$c9.622a.rec <- NULL
+
+# round 20
+
+df20$c9.621a.rec <- recode(df20$pc9.621a, "99999997:99999999=NA")
+df20$c9.622a.rec <- recode(df20$pc9.622a, "99999997:99999999=NA")
+
+df20$c9.6.2a[df20$c9.621a.rec == 1] <- 1
+df20$c9.6.2a[df20$c9.622a.rec == 1] <- 1
+df20$c9.6.2a[df20$c9.621a.rec != 1 & df20$c9.622a.rec != 1] <- 2
+
+df20$pc9.621a <- NULL
+df20$pc9.622a <- NULL
+df20$c9.621a.rec <- NULL
+df20$c9.622a.rec <- NULL
+
+
+names(df09) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df10) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df11) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df12) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df13) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df14) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df15) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df16) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df17) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df18) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df19) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+names(df20) <- c("income","hh_size","psu","weight","id","fridge","tv","water","hotwater","sewage","phone","computer")
+
+df09$round <- 09
+df09$year <- 2000
+
+df10$round <- 10
+df10$year <- 2001
+
+df11$round <- 11
+df11$year <- 2002
+
+df12$round <- 12
+df12$year <- 2003
+
+df13$round <- 13
+df13$year <- 2004
+
+df14$round <- 14
+df14$year <- 2005
+
+df15$round <- 15
+df15$year <- 2006
+
+df16$round <- 16
+df16$year <- 2007
+
+df17$round <- 17
+df17$year <- 2008
+
+df18$round <- 18
+df18$year <- 2009
+
+df19$round <- 19
+df19$year <- 2010
+
+df20$round <- 20
+df20$year <- 2011
+
+df <- rbind(df09,df10,df11,df12,df13,df14,df15,df16,df17,df18,df19,df20)
+
+
+
+# Material poor
+
+# fridge
+df$fridge.rec <- recode(df$fridge, "99999997:99999999=NA; 1=0; 2=1")
+df$md.fridge[df$fridge.rec == 1 ] <- 'poor'
+df$md.fridge[df$fridge.rec != 1 ] <- 'non.poor'
+
+# tv
+df$tv.rec <- recode(df$tv, "99999997:99999999=NA; 1=0; 2=1")
+df$md.tv[df$tv.rec == 1 ] <- 'poor'
+df$md.tv[df$tv.rec != 1 ] <- 'non.poor'
+
+# water
+df$water.rec <- recode(df$water, "99999997:99999999=NA; 1=0; 2=1")
+df$md.water[df$water.rec == 1 ] <- 'poor'
+df$md.water[df$water.rec != 1 ] <- 'non.poor'
+
+#hotwater
+df$hotwater.rec <- recode(df$hotwater, "99999997:99999999=NA; 1=0; 2=1")
+df$md.hotwater[df$hotwater.rec == 1 ] <- 'poor'
+df$md.hotwater[df$hotwater.rec != 1 ] <- 'non.poor'
+
+#sewage
+df$sewage.rec <- recode(df$sewage, "99999997:99999999=NA; 1=0; 2=1")
+df$md.sewage[df$sewage.rec == 1 ] <- 'poor'
+df$md.sewage[df$sewage.rec != 1 ] <- 'non.poor'
+
+# phone
+df$phone.rec <- recode(df$phone, "99999997:99999999=NA; 1=0; 2=1")
+df$md.phone[df$phone.rec == 1 ] <- 'poor'
+df$md.phone[df$phone.rec != 1 ] <- 'non.poor'
+
+# computer
+df$computer.rec <- recode(df$computer, "99999997:99999999=NA; 1=0; 2=1")
+df$md.computer[df$computer.rec == 1 ] <- 'poor'
+df$md.computer[df$computer.rec != 1 ] <- 'non.poor'  	
+
+
+
+df$psu <- factor(df$psu)
+df$psu_txt[df$psu == 1] <- "St. Petersburg"
+df$psu_txt[df$psu == 2] <- "Moscow"
+df$psu_txt[df$psu == 3] <- "Moscow region"
+df$psu_txt[df$psu == 4] <- "Komi Republic, Syktyvkar"
+df$psu_txt[df$psu == 5] <- "Komi Republic, Usinsk area"
+df$psu_txt[df$psu == 6] <- "Leningrad Region., Volosovskiy area"
+df$psu_txt[df$psu == 7] <- "Smolensk"
+df$psu_txt[df$psu == 8] <- "Kalinin region. Rzhev area"
+df$psu_txt[df$psu == 9] <- "Tula"
+df$psu_txt[df$psu == 10] <- "Kaluga region. Kuibyshev district"
+df$psu_txt[df$psu == 11] <- "Nizhny Novgorod"
+df$psu_txt[df$psu == 12] <- "Chuvash Republic, Shumerlya area"
+df$psu_txt[df$psu == 13] <- "Penza region, district Zemetchinsky"
+df$psu_txt[df$psu == 14] <- "Lipetsk"
+df$psu_txt[df$psu == 15] <- "Tambov., Uvarovo area"
+df$psu_txt[df$psu == 16] <- "Kazan"
+df$psu_txt[df$psu == 17] <- "Saratov"
+df$psu_txt[df$psu == 18] <- "Saratov. Wolski area"
+df$psu_txt[df$psu == 19] <- "Volgograd region. Rudnyansky area"
+df$psu_txt[df$psu == 20] <- "Kabardino-Balkaria"
+df$psu_txt[df$psu == 21] <- "Rostov region., G.Bataysk"
+df$psu_txt[df$psu == 22] <- "Krasnodar"
+df$psu_txt[df$psu == 23] <- "Stavropol, St. George area"
+df$psu_txt[df$psu == 24] <- "Krasnodar region, district Kuschevsky"
+df$psu_txt[df$psu == 25] <- "Chelyabinsk"
+df$psu_txt[df$psu == 26] <- "Kurgan"
+df$psu_txt[df$psu == 27] <- "Udmurt Republic Glazov District"
+df$psu_txt[df$psu == 28] <- "Orenburg region., Orsk"
+df$psu_txt[df$psu == 29] <- "Perm region., Solikamsk area"
+df$psu_txt[df$psu == 30] <- "Chelyabinsk region"
+df$psu_txt[df$psu == 31] <- "Tomsk"
+df$psu_txt[df$psu == 32] <- "Khanty-Mansiysk, Tyumen"
+df$psu_txt[df$psu == 33] <- "Altay, Biysk district"
+df$psu_txt[df$psu == 34] <- "Altay, Kurinsky area"
+df$psu_txt[df$psu == 35] <- "Krasnoyarsk"
+df$psu_txt[df$psu == 36] <- "Vladivostok"
+df$psu_txt[df$psu == 37] <- "Krasnoyarsk, Nazarovsky area"
+df$psu_txt[df$psu == 38] <- "Amur Region, Tambov region"
+df$psu_txt[df$psu == 39] <- "Novosibirsk Region, Berd region"
+df$psu_txt <- factor(df$psu_txt)
+
+
+save(df, file="../data/df_material.RData")
+
+fridge <- prop.table(table(df$year,df$md.fridge),1)*100
+tv <- prop.table(table(df$year,df$md.tv),1)*100
+water <- prop.table(table(df$year,df$md.water),1)*100
+hotwater <- prop.table(table(df$year,df$md.hotwater),1)*100
+sewage <- prop.table(table(df$year,df$md.sewage),1)*100
+phone <- prop.table(table(df$year,df$md.phone),1)*100
+computer <- prop.table(table(df$year,df$md.computer),1)*100
+
+timeplot <- function(data,title){
+  df <- as.data.frame(data)
+  df <- subset(df, Var2 == 'poor')
+  df <- df[with(df, order(Freq)), ]
+  df$Freq <- round(df$Freq,1)
+  titletext <- paste("share of poor household according lacking",title)
+  ggplot(df, aes(x=Var1,y=Freq,label=Freq)) +
+    geom_bar(stat="identity") +
+    labs(title=titletext) +
+    geom_text(size=3,vjust=-1) +
+    theme(axis.text.x = element_text(angle = 90))
+}
+
+#timeplot(fridge,"fridge")
+timeplot(tv,"tv")
+timeplot(water,"water")
+timeplot(hotwater,"hotwater")
+timeplot(sewage,"sewage")
+#timeplot(phone,"phone")
+timeplot(computer,"computer")
+```
+
+
+
+```{rmaterial_compareplot1}
+d.df <- svydesign(id = ~id, weights = ~weight, data = df)
+
+
+# tv
+t2 <- data.frame(svytable(~md.tv+psu_txt+year,d.df))
+names(t2) <- c("poor","psu_txt","year","Freq")
+t2.w <- dcast(t2, psu_txt + year ~ poor, value.var="Freq")
+t2.w$poor.rate <- t2.w$poor / (t2.w$non.poor + t2.w$poor) * 100
+t2.w$poor.rate <- round(t2.w$poor.rate, 1)
+cnames <- subset(t2.w, year == 2011)
+ggplot(t2.w, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=poor.rate)) +
+  geom_point() + geom_path() + geom_text(vjust=-1, size=2) +
+  labs(title="Lacking tv") +
+  geom_text(data=cnames, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=psu_txt)) +
+  theme(legend.position="none")
+# water
+t2 <- data.frame(svytable(~md.water+psu_txt+year,d.df))
+names(t2) <- c("poor","psu_txt","year","Freq")
+t2.w <- dcast(t2, psu_txt + year ~ poor, value.var="Freq")
+t2.w$poor.rate <- t2.w$poor / (t2.w$non.poor + t2.w$poor) * 100
+t2.w$poor.rate <- round(t2.w$poor.rate, 1)
+cnames <- subset(t2.w, year == 2011)
+ggplot(t2.w, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=poor.rate)) +
+  geom_point() + geom_path() + geom_text(vjust=-1, size=2) +
+  labs(title="Lacking water") +
+  geom_text(data=cnames, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=psu_txt)) +
+  theme(legend.position="none")
+# hotwater
+t2 <- data.frame(svytable(~md.hotwater+psu_txt+year,d.df))
+names(t2) <- c("poor","psu_txt","year","Freq")
+t2.w <- dcast(t2, psu_txt + year ~ poor, value.var="Freq")
+t2.w$poor.rate <- t2.w$poor / (t2.w$non.poor + t2.w$poor) * 100
+t2.w$poor.rate <- round(t2.w$poor.rate, 1)
+cnames <- subset(t2.w, year == 2011)
+ggplot(t2.w, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=poor.rate)) +
+  geom_point() + geom_path() + geom_text(vjust=-1, size=2) +
+  labs(title="Lacking hotwater") +
+  geom_text(data=cnames, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=psu_txt)) +
+  theme(legend.position="none")
+# sewage
+t2 <- data.frame(svytable(~md.sewage+psu_txt+year,d.df))
+names(t2) <- c("poor","psu_txt","year","Freq")
+t2.w <- dcast(t2, psu_txt + year ~ poor, value.var="Freq")
+t2.w$poor.rate <- t2.w$poor / (t2.w$non.poor + t2.w$poor) * 100
+t2.w$poor.rate <- round(t2.w$poor.rate, 1)
+cnames <- subset(t2.w, year == 2011)
+ggplot(t2.w, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=poor.rate)) +
+  geom_point() + geom_path() + geom_text(vjust=-1, size=2) +
+  labs(title="Lacking sewage") +
+  geom_text(data=cnames, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=psu_txt)) +
+  theme(legend.position="none")
+
+# computer
+t2 <- data.frame(svytable(~md.computer+psu_txt+year,d.df))
+names(t2) <- c("poor","psu_txt","year","Freq")
+t2.w <- dcast(t2, psu_txt + year ~ poor, value.var="Freq")
+t2.w$poor.rate <- t2.w$poor / (t2.w$non.poor + t2.w$poor) * 100
+t2.w$poor.rate <- round(t2.w$poor.rate, 1)
+cnames <- subset(t2.w, year == 2011)
+ggplot(t2.w, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=poor.rate)) +
+  geom_point() + geom_path() + geom_text(vjust=-1, size=2) +
+  labs(title="Lacking computer") +
+  geom_text(data=cnames, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=psu_txt)) +
+  theme(legend.position="none")
+
+```
+
+# Compositional measure of material deprivation
+
+I have chosen 6 items as indicators of material deprivation. Currently I have decided that household is counted as poor in case it deprived in term of 3 or more items.
+
+```{rmaterial_compare_composite}
+
+df$md.sum <-  #df$fridge.rec+
+              df$tv.rec+
+              df$water.rec+
+              df$hotwater.rec+
+              df$sewage.rec+
+              #df$phone.rec+
+              df$computer.rec
+
+df$md.poor[df$md.sum > 2] <- 'poor'
+df$md.poor[df$md.sum < 3] <- 'non.poor'
+df$md.poor <- factor(df$md.poor)
+table(df$md.poor, useNA="ifany")
+```
+
+```{rmaterial_compare_compositebar}
+t2 <- data.frame(prop.table(table(df$year,df$md.poor),1)*100) 
+names(t2)
+t3 <- subset(t2, Var2 == 'poor')
+t3$Freq <- round(t3$Freq, 1)
+ggplot(t3, aes(x=Var1, y=Freq)) +
+  geom_bar(stat="identity") +
+  labs(title="compositional measure at national level")
+```
+
+
+
+```{rmaterial_compare_compositeregline}
+t2 <- data.frame(table(df$md.poor,df$psu_txt,df$year))
+names(t2) <- c("poor","psu_txt","year","Freq")
+t2.w <- dcast(t2, psu_txt + year ~ poor, value.var="Freq")
+t2.w$poor.rate <- t2.w$poor / (t2.w$non.poor + t2.w$poor) * 100
+t2.w$poor.rate <- round(t2.w$poor.rate, 1)
+cnames <- subset(t2.w, year == 2011)
+ggplot(t2.w, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=poor.rate)) +
+  geom_point() + geom_path() + geom_text(vjust=-1, size=2) +
+  labs(title="Compositional measure") +
+  geom_text(data=cnames, aes(x=year, y=poor.rate, group=psu_txt, color=psu_txt, label=psu_txt)) +
+  theme(legend.position="none")
+```
+
+

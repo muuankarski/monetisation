@@ -1,0 +1,341 @@
+- [back to index](index.html)
+
+<h1 class="title">Consumption & consumption poverty rounds 9 - 21, years 2000 - 2011</h1>
+
+```{rr20loaddata}
+library(ggplot2)
+library(plyr)
+library(survey)
+load("~/workspace/russia/rlms/monetisation/data/rlms.RData")
+```
+
+```{rr20opts, echo=FALSE}
+opts_chunk$set(echo=TRUE, dev='png', eval=TRUE, cache=TRUE, fig.height=8, fig.width=12, message=FALSE, warning=FALSE)
+
+```
+
+# Consumption poverty
+
+Consumption poverty is defined as *lack of xxx due to lack of money*. It is a compositional variable consisting of following variables:
+
+- pf16.1 В течение последних 12 месяцев случалось ли так, что кто-то из членов Вашей семьи не смог получить амбулаторное, поликлиническое лечение только из-за нехватки денег?
+- pf16.2 В течение последних 12 месяцев случалось ли так, что кто-то из членов Вашей семьи не смог получить стационарного лечения: в больнице, госпитале, клинике только из-за нехватки денег?
+- pf16.3 В течение последних 12 месяцев случалось ли так, что кто-то из членов Вашей семьи не смог получить стоматологическую помощь только из-за нехватки денег?
+- pf16.4 В течение последних 12 месяцев случалось ли так, что кто-то из членов Вашей семьи не смог купить необходимые лекарства только з-за нехватки денег?
+
+
+If a household is reporting deprivation in regard to any of the items above, it is (and it's members) classified as **consumption poor**.
+
+## Poverty rate at national level
+
+
+```{rconsumpsubset, results='asis'}
+df09 <- subset(r09_hh_rep, 
+               select=c("ef14","e_nfm","psu","e_hhwgt","eredid_h",
+                        "ef16.1","ef16.2","ef16.3","ef16.4"#,"ef16.5"
+                        ))
+df10 <- subset(r10_hh_rep, 
+               select=c("ff14","f_nfm","psu","f_hhwgt","fredid_h",
+                        "ff16.1","ff16.2","ff16.3","ff16.4"#,"ff16.5"
+                        ))
+df11 <- subset(r11_hh_rep, 
+               select=c("gf14","g_nfm","psu","g_hhwgt","gredid_h",
+                        "gf16.1","gf16.2","gf16.3","gf16.4"#,"gf16.5"
+                        ))
+df12 <- subset(r12_hh_rep, 
+               select=c("hf14","h_nfm","psu","h_hhwgt","hredid_h",
+                        "hf16.1","hf16.2","hf16.3","hf16.4"#,"hf16.5"
+                        ))
+df13 <- subset(r13_hh_rep, 
+               select=c("if14","i_nfm","psu","i_hhwgt","iredid_h",
+                        "if16.1","if16.2","if16.3","if16.4"#,"if16.5"
+                        ))
+df14 <- subset(r14_hh_rep, 
+               select=c("jf14","j_nfm","psu","j_hhwgt","jredid_h",
+                        "jf16.1","jf16.2","jf16.3","jf16.4"#,"jf16.5"
+                        ))
+df15 <- subset(r15_hh_rep, 
+               select=c("kf14","k_nfm","psu","k_hhwgt","kredid_h",
+                        "kf16.1","kf16.2","kf16.3","kf16.4"#,"kf16.5"
+                        ))
+df16 <- subset(r16_hh_rep, 
+               select=c("lf14","l_nfm","psu","l_hhwgt","lredid_h",
+                        "lf16.1","lf16.2","lf16.3","lf16.4"#,"lf16.5"
+                        ))
+df17 <- subset(r17_hh_rep, 
+               select=c("mf14","m_nfm","psu","m_hhwgt","mredid_h",
+                        "mf16.1","mf16.2","mf16.3","mf16.4"#,"mf16.5"
+                        ))
+df18 <- subset(r18_hh_rep, 
+               select=c("nf14","n_nfm","psu","n_hhwgt","nredid_h",
+                        "nf16.1","nf16.2","nf16.3","nf16.4"#,"nf16.5"
+                        ))
+df19 <- subset(r19_hh_rep, 
+               select=c("of14","o_nfm","psu","o_hhwgt","oredid_h",
+                        "of16.1","of16.2","of16.3","of16.4"#,"of16.5"
+                        ))
+df20 <- subset(r20_hh_rep, 
+               select=c("pf14","p_nfm","psu","p_hhwgt",
+                        "predid_h",
+                         "pf16.1", #outpatient care, outpatient treatment only because of lack of money?
+                         "pf16.2", # not get hospital treatment: in a hospital, hospital, clinic, just because of lack of money?
+                         "pf16.3", # not get dental care just because of lack of money?
+                         "pf16.4"#, # not able to buy the necessary drugs just because of lack of money?
+                         #"pf16.5", # not go to a rest home, sanatorium, health resort only because of lack of money?
+                          ))
+
+
+names(df09) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df10) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df11) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df12) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df13) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df14) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df15) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df16) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df17) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df18) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df19) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+names(df20) <- c("income","hh_size","psu","weight","id","f16.1","f16.2","f16.3","f16.4")
+
+df09$round <- 09
+df09$year <- 2000
+
+df10$round <- 10
+df10$year <- 2001
+
+df11$round <- 11
+df11$year <- 2002
+
+df12$round <- 12
+df12$year <- 2003
+
+df13$round <- 13
+df13$year <- 2004
+
+df14$round <- 14
+df14$year <- 2005
+
+df15$round <- 15
+df15$year <- 2006
+
+df16$round <- 16
+df16$year <- 2007
+
+df17$round <- 17
+df17$year <- 2008
+
+df18$round <- 18
+df18$year <- 2009
+
+df19$round <- 19
+df19$year <- 2010
+
+df20$round <- 20
+df20$year <- 2011
+
+df <- rbind(df09,df10,df11,df12,df13,df14,df15,df16,df17,df18,df19,df20)
+
+library(car)
+df$f16.1.rec <- recode(df$f16.1, "99999997:99999999=NA; 6=0; 2=0")
+df$f16.2.rec <- recode(df$f16.2, "99999997:99999999=NA; 6=0; 2=0")
+df$f16.3.rec <- recode(df$f16.3, "99999997:99999999=NA; 6=0; 2=0")
+df$f16.4.rec <- recode(df$f16.4, "99999997:99999999=NA; 6=0; 2=0")
+
+#table(df$f16.4.rec, useNA="ifany")
+
+
+
+df$psu <- factor(df$psu)
+df$psu_txt[df$psu == 1] <- "St. Petersburg"
+df$psu_txt[df$psu == 2] <- "Moscow"
+df$psu_txt[df$psu == 3] <- "Moscow region"
+df$psu_txt[df$psu == 4] <- "Komi Republic, Syktyvkar"
+df$psu_txt[df$psu == 5] <- "Komi Republic, Usinsk area"
+df$psu_txt[df$psu == 6] <- "Leningrad Region., Volosovskiy area"
+df$psu_txt[df$psu == 7] <- "Smolensk"
+df$psu_txt[df$psu == 8] <- "Kalinin region. Rzhev area"
+df$psu_txt[df$psu == 9] <- "Tula"
+df$psu_txt[df$psu == 10] <- "Kaluga region. Kuibyshev district"
+df$psu_txt[df$psu == 11] <- "Nizhny Novgorod"
+df$psu_txt[df$psu == 12] <- "Chuvash Republic, Shumerlya area"
+df$psu_txt[df$psu == 13] <- "Penza region, district Zemetchinsky"
+df$psu_txt[df$psu == 14] <- "Lipetsk"
+df$psu_txt[df$psu == 15] <- "Tambov., Uvarovo area"
+df$psu_txt[df$psu == 16] <- "Kazan"
+df$psu_txt[df$psu == 17] <- "Saratov"
+df$psu_txt[df$psu == 18] <- "Saratov. Wolski area"
+df$psu_txt[df$psu == 19] <- "Volgograd region. Rudnyansky area"
+df$psu_txt[df$psu == 20] <- "Kabardino-Balkaria"
+df$psu_txt[df$psu == 21] <- "Rostov region., G.Bataysk"
+df$psu_txt[df$psu == 22] <- "Krasnodar"
+df$psu_txt[df$psu == 23] <- "Stavropol, St. George area"
+df$psu_txt[df$psu == 24] <- "Krasnodar region, district Kuschevsky"
+df$psu_txt[df$psu == 25] <- "Chelyabinsk"
+df$psu_txt[df$psu == 26] <- "Kurgan"
+df$psu_txt[df$psu == 27] <- "Udmurt Republic Glazov District"
+df$psu_txt[df$psu == 28] <- "Orenburg region., Orsk"
+df$psu_txt[df$psu == 29] <- "Perm region., Solikamsk area"
+df$psu_txt[df$psu == 30] <- "Chelyabinsk region"
+df$psu_txt[df$psu == 31] <- "Tomsk"
+df$psu_txt[df$psu == 32] <- "Khanty-Mansiysk, Tyumen"
+df$psu_txt[df$psu == 33] <- "Altay, Biysk district"
+df$psu_txt[df$psu == 34] <- "Altay, Kurinsky area"
+df$psu_txt[df$psu == 35] <- "Krasnoyarsk"
+df$psu_txt[df$psu == 36] <- "Vladivostok"
+df$psu_txt[df$psu == 37] <- "Krasnoyarsk, Nazarovsky area"
+df$psu_txt[df$psu == 38] <- "Amur Region, Tambov region"
+df$psu_txt[df$psu == 39] <- "Novosibirsk Region, Berd region"
+
+df$psu_txt <- factor(df$psu_txt)
+
+## Consumption poor
+
+save(df, file="../data/df_consumption.RData")
+rm(list=setdiff(ls(), "df"))
+
+```
+
+## Individual items of consumption deprivation
+
+```{rconsumpreg_ind}
+
+library(car)
+
+df$cp <- df$f16.1.rec+df$f16.2.rec+df$f16.3.rec+df$f16.4.rec
+
+df$cpoor[df$cp >= 1] <- 'poor'
+df$cpoor[df$cp == 0] <- 'non.poor'
+
+df$outpatient[df$f16.1.rec == 1] <- 'poor' 
+df$outpatient[df$f16.1.rec != 1] <- 'non.poor' 
+df$hospital[df$f16.2.rec == 1] <- 'poor' 
+df$hospital[df$f16.2.rec != 1] <- 'non.poor' 
+df$dental[df$f16.3.rec == 1] <- 'poor' 
+df$dental[df$f16.3.rec != 1] <- 'non.poor' 
+df$drugs[df$f16.4.rec == 1] <- 'poor' 
+df$drugs[df$f16.4.rec != 1] <- 'non.poor' 
+
+consumption <- prop.table(table(df$year,df$cpoor),1)*100
+outpatient <- prop.table(table(df$year,df$outpatient),1)*100
+hospital <- prop.table(table(df$year,df$hospital),1)*100
+dental <- prop.table(table(df$year,df$dental),1)*100
+drugs <- prop.table(table(df$year,df$drugs),1)*100
+
+nat.table <- consumption
+
+
+timeplot <- function(data,title){
+  df <- as.data.frame(data)
+  df <- subset(df, Var2 == 'poor')
+  df <- df[with(df, order(Freq)), ]
+  df$Freq <- round(df$Freq,1)
+  titletext <- paste("share of missing",title,"care due to lack of money")
+  ggplot(df, aes(x=Var1,y=Freq,label=Freq)) +
+    geom_bar(stat="identity") +
+    labs(title=titletext) +
+    geom_text(size=3,vjust=-1) +
+    theme(axis.text.x = element_text(angle = 90))
+}
+
+timeplot(outpatient,"outpatient")
+timeplot(hospital,"hospital")
+timeplot(dental,"dental")
+timeplot(drugs,"drugs")
+
+```
+
+
+
+## Consumption poverty rates
+
+
+```{rconsumplot}
+
+library(survey)
+d.df <- svydesign(id = ~id, weights = ~weight, data = df)
+
+t2 <- data.frame(prop.table(svytable(~cpoor + year, d.df), 2) * 100)
+t3 <- subset(t2, cpoor %in% "poor")
+t3$Freq <- round(t3$Freq, 1)
+t3$group <- "group"
+
+ggplot(t3, aes(x=year, y=Freq, label=Freq, group=group)) +
+  geom_point() + geom_path() + geom_text(vjust=-1) +
+  labs(title="Consumption poverty rates")
+
+t2 <- data.frame(svytable(~cpoor + psu_txt + year, d.df))
+t2.w <- dcast(t2, psu_txt + year ~ cpoor, value.var="Freq")
+t2.w$cpoor.rate <- t2.w$poor / (t2.w$non.poor + t2.w$poor) * 100
+t2.w$cpoor.rate <- round(t2.w$cpoor.rate, 1)
+
+cnames <- subset(t2.w, year == 2011)
+ggplot(t2.w, aes(x=year, y=cpoor.rate, group=psu_txt, color=psu_txt, label=cpoor.rate)) +
+  geom_point() + geom_path() + geom_text(vjust=-1, size=2) +
+  geom_path(data=t3, aes(x=year, y=Freq, label=Freq, group=group), color="black", linetype="dashed", size=1) +
+  labs(title="Consumption poverty rates by regions (Dashed black line showing the country level)") +
+  geom_text(data=cnames, aes(x=year, y=cpoor.rate, group=psu_txt, color=psu_txt, label=psu_txt)) +
+  theme(legend.position="none")
+
+```
+
+## Regional variation on map
+
+```{rconsumpmap, eval=TRUE}
+library(mapproj)
+library(maptools)
+library(rgdal)
+library(ggplot2)
+library(gdata)
+
+rm(list=setdiff(ls(), "df"))
+
+map <- readOGR(dsn ="/home/aurelius/workspace/data/shapefiles/russia/gadm/RUS_adm_simple", layer="RUS_adm2")
+map@data$id <- rownames(map@data)
+map.points <- fortify(map, region = "id")
+map.df <- merge(map.points, map@data, by = "id")
+
+library(RCurl)
+GHurl <- getURL("https://raw.github.com/muuankarski/data/master/russia/rus_rlms.csv")
+region <- read.csv(text = GHurl)
+
+df20 <- subset(df, year == 2011)
+
+regplotmap <- function(data,title){
+  df <- as.data.frame(data)
+  df <- subset(df, Var2 == 'poor')
+  df <- df[with(df, order(Freq)), ]
+  df$Var1 <- factor(df$Var1, levels=df$Var1)
+  df$Freq <- round(df$Freq,1)
+  region_ID_1 <- subset(region, ID_1 != 0)
+  region_ID_2 <- subset(region, ID_2 != 0)
+  df_ID_1 <- merge(df,region_ID_1,by.x="Var1",by.y="psu")
+  df_ID_2 <- merge(df,region_ID_2,by.x="Var1",by.y="psu")
+  choro_ID_1 <- merge(map.df,df_ID_1, by="ID_1", type = "full")
+  choro_ID_1 <- rename(choro_ID_1, c("ID_2.x" = "ID_2"))
+  choro_ID_1$ID_2.y <- NULL 
+  choro_ID_2 <- merge(map.df,df_ID_2, by="ID_2", type = "right")
+  choro_ID_2 <- rename(choro_ID_2, c("ID_1.x" = "ID_1"))
+  choro_ID_2$ID_1.y <- NULL 
+  choro <- rbind(choro_ID_1,choro_ID_2)
+  choro <- choro[order(choro$order),]
+  cnames <- stats:::aggregate.formula(cbind(long, lat, Freq) ~ psu_txt, 
+                                    data=choro, mean)
+  titletext <- paste("share of poor household according lacking",title)
+  ggplot(choro, aes(long,lat,group=group)) +
+  geom_polygon(data = map.df, aes(long,lat), fill=NA, color = "white") +
+  geom_text(data=cnames, aes(long, lat, label = psu_txt, group=psu_txt), size=2, color="black",vjust=-2) +
+  geom_point(data=cnames, aes(long, lat, size = Freq, group=psu_txt), shape=1) +
+  geom_text(data=cnames, aes(long, lat, label = Freq, group=psu_txt), size=2.4, color="black",vjust=3) +
+  theme(legend.position="top") +
+  labs(title=titletext) +
+  coord_map(project="orthographic",xlim=c(35,145),ylim=c(45,70))
+}
+
+consumption <- prop.table(table(df20$psu,df20$cpoor),1)*100
+
+regplotmap(consumption,"lack of consumption")
+```
+
+
+
