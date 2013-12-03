@@ -1,0 +1,352 @@
+% Targeting performance of monthly cash payments at multidimensional poverty in Russia in 2000 - 2011 [^*]
+% Markus Kainu [^**]
+% May 8, 2013
+
+
+```{rarticlealku, echo=FALSE, eval=FALSE}
+setwd("~/workspace/russia/rlms/monetisation")
+library(knitr)
+knit("article.Rmd")
+system("pandoc article.md -o article.pdf --bibliography=bibtex.bib --number-sections --latexmathml --variable=geometry:a4paper")
+
+
+library(kaRski)
+knitpandoc("article")
+knitpandoc_pdf("article")
+
+system("pandoc -t html article.md -o article.html --standalone --bibliography=bibtex.bib --toc --number-sections --mathjax")
+
+library(knitr)
+knit("article.Rmd")
+
+~/.cabal/bin/pandoc article.md --template=../../../template/pandoc_article/tex_templates/pandoc.latex.template --number-sections --toc --latex-engine=xelatex -V lang=english -V papersize:a4paper -V documentclass=scrartcl --latexmathml -o article.tex
+sed -i 's/begin{figure}\[htbp\]/begin{figure}\[H\]/g' article.tex
+xelatex article.tex
+
+```
+
+[^*]: Prepared for the 1st international RLMS-HSE Conference in Moscow May 2013. Work in progress. Do not cite or circulate without the permission of author. Reproducible R-code for the analysis can be found at: [https://github.com/muuankarski/monetisation](https://github.com/muuankarski/monetisation)
+
+[^**]: PhD Student. Aleksanteri institute, University of Helsinki & Department of Social Research, University of Turku. Email: <a href="mailto:markuskainu@gmail.com">markuskainu@gmail.com</a>, tel: +358 50 3516164, fax +358 9 191 23615. Website: <a href="http://markuskainu.fi">markuskainu.fi</a>
+
+
+\begin{abstract}
+This paper analyses the targeting performance of monetised in-kind benefits at  household deprived in terms of income, consumption and material well-being. Monetization of in-kind benefits has been one of the major reforms in attempt to modernize Russian welfare system where vast system of in-kind benefits were monetized into monthly cash payments (MCP) following the implementation of federal law FZ-122 in 2005. This paper uses multidimensional notion of poverty as an indicator of household well-being instead of plain income commonly used in this type of analysis. Main question is to what extend monetisation reform has improved the capacity of Russian welfare state to fulfil its modern tasks of redistribution of income and reduction of poverty. Paper utilises a cross-sectional setting with over-time comparison from 2000 to 2011 using the Russian Longitudinal Monitoring Study dataset. Preliminary results confirm the earlier findings and indicate that poverty reduction and redistributive impact of MCP is low. There is no clear difference neither in coverage nor in targeting of MCP between non-poor and poor households. Situation has not improved over time.
+\end{abstract}
+
+\thispagestyle{empty}
+
+**keywords:** poverty, income, consumption, material deprivation, targeting, social cash benefits
+
+
+\newpage
+
+# Introduction
+
+\setcounter{page}{1}
+
+The social crisis resulted from Russian transition from the socialist system to market economy is far from over. Economic recovery over the last decade has accumulated resources for tackling social problems, but also provided support for the ruling political regime. Poverty rates have been falling in 2000s, but a significant proportion of households are still having incomes below the subsistence minimum. Unlike in poverty rates, there has been no improvements in income inequality, but the rates have varied at high level. 
+
+
+
+The system of welfare provisions has undergone great changes during the post-socialist period. The socialist welfare state favoured services and in-kind benefits over income transfers. That structure made it weak in terms of poverty reduction and redistributive capacity, but the system wasn't greatly reformed until 2005.  Yel'tsin time was characterized by small transformations of rusting Soviet system [@fox_safety_2003], whereas Putin's period introduced several welfare reforms in the field of healthcare, pensions, housing and utilities [@cook_postcommunist_2007]. Monetization of in-kind benefits has been one of the major reforms in attempt to modernize Russian welfare system. A complex system of in-kind benefits were monetized in this reform into *monthly cash payments* (MCP) as part of the implementation of federal law FZ-122 in 2005. These introduced income transfers cover roughly one fourth of Russian households and have therefore potential to improve the situation. Now the new benefit scheme has been several years in operation and it is important to look at its potential in poverty reduction and income redistribution.
+
+Issues of conceptualizations and empirical measurement of multidimensional poverty has been discussed in a rich literature by authors following the works of Amartya Sen [@sen_development_1999;@anand_concepts_1997;@atkinson_multidimensional_2003;@deutsch_measuring_2005;@thorbecke2008]. More recently there has been a growing interest in what have come to be termed *multidimensional indices of poverty* [@ravallion_multidimensional_2011] partly provoked by the introduction *multidimensional poverty index* by Oxford Poverty & Human Development Initiative [@alkire_counting_2010]. In the context of Russian Federation the problems of income based poverty assessments are clear. On one hand, the incomes reported by households may not be accurate and on other the especially the worst off households rely on survival strategies beyond the money economy, eg. barter and subsistence agriculture. Therefore a this paper utilizes a multidimensional measure of poverty including items of deprivation in income, consumption and material well-being.
+
+The interplay between welfare state policies and poverty reduction has received attention in comparative studies in over the years [@mitchell_income_1991;@korpi_paradox_1998;@kenworthy_social-welfare_1999;@kenworthy_progress_2011]. Main focus has been at the distributional outcomes of welfare state policies. Several studies have also emphasized the social assistance schemes linking the schemes with the poverty outcomes [@nelson_minimum_2009;@behrendt_at_2002;@kuivalainen_comparative_2004]. The attempts to connect welfare state benefits with other forms of poverty than income poverty have been very few, with the exception a recent study by [@nelson_counteracting_2012] on link between social assistance benefit levels and material deprivation in the European Union. Nelson finds a link between low levels of social assistance and high rates of material deprivation when studying 26 EU countries.
+
+This research combines two crucial issues in this context. First, it operationalises poverty as a multidimensional notion instead uni-dimensional income measures and second, it analyses the impact of particular monetised welfare provisions, monthly cash payments. In other words this study poses a question:   *to what extend the introduction of MCP benefits have affected the capacity of Russian welfare system to reduce poverty and redistribute income?*
+
+At its current form the paper focuses heavily on methods and results with abundance of graphical illustration. Theoretical framing is thin: basic reasoning behind monetisation reform and MCP benefits are explained in section two. The research design with data and methods is described in section 3 and analysis is reported in section 4. Some concluding remarks are made in section 5.
+
+# Theoretical background
+
+
+## Monetisation of l'goty
+
+
+Irina Sinitsina's review of studies on implementation of monetization reform provides an excellent resource to understand the aims, motives, actors and the anatomy of the reform [@sinitsina_experience_2009]. As she wrotes:
+
+>by the end of 2004, the system of in-kind benefits in Russia had developed into a vast and complicated scheme that encompassed the nearly unchanged legacy of the Soviet system’s social sector as well as numerous new benefits assigned during the course of transition. ... Throughout the 1990s, decisions to introduce new privileges were often taken at the federal level while regions or municipalities were required to fund them out of their own budgets. Both federal and regional authorities passed a multitude of legislative acts that envisaged various benefits/privileges for several categories of citizens with regard to supply of medicines, transportation, housing, public utilities and other services. [p8., @sinitsina_experience_2009]
+
+In summarizing the aims and motives of the monetization reforms she comes up with three rationales behind the reform [@sinitsina_experience_2009]. Firstly, there was financial burden in the form of unfunded mandates in benefit systems. This was the case especially with different veteran priviledges that amounted more than ten times the financial costs of targereted social assistance programs and covered roughly 70 percent of the population. Welfare systems was not able to fulfil these mandates resulting a great share of population unable to access the benefit they were entitled to [@alexandrova_reform_2007]. Second, the poor targeting of priviledges in the with high poverty rates and growing inequality had resulted in social rationale for reforming the system. Allocation of in-kind benefits was based on categories, but there was no category for poor households/individuals. The social security system as whole was regressive with less than 10 percent of the resources means tested.
+
+Table: Prevalence of benefits among poor and non-poor families, percent of poor and non-poor households.
+
+
+Types of benefits                                     Poor households Non-poor households
+-----------------                                     --------------- -------------------
+Benefits for housing, communal services and utilities 28.2 %          49.5 %
+Benefits for health services and medicines            11.7 %          21.3 %
+Benefits for transportation                           24.2 %          47.5 %
+
+*source: [@ovcharova_sotsialnye_2005] based on NOBUS data (2003)*
+
+Third, there were also economic rationales for the reform as *existence of various kinds of privileges that encompassed virtually half of the country’s population significantly distorted the financial balances of several economic sectors including transportation, housing and utilities.* [p13., @sinitsina_experience_2009]
+
+Some of the early analysis already claimed that the there no social rationale in the reform and that it the reform had nothing to do with social policy. As the reform preserved the categorical principle in resource allocation it provided no immediate nor blueprint for the future improvements of social policy. [@alexandrova_reform_2007]. Also, the reforms was considered regressive from the regional point of view. Increase in financial responsibilities of local governments was expected to increase the differentiation of living conditions between families living in rich or poor areas.
+
+On the whole, the monetization made very limited progress compared to its potential. From comparative perspective the reform was very modest compared to what CIS countries have accomplished. As [@alexandrova_reform_2007] write, Russia represents one of the most outstanding examples of social policies and practices to be avoided by countries seeking to build an efficient social safety net that can function sustainably in a market economy.
+
+
+## Multidimensional approach to poverty in Russian Federation
+
+The idea to study material deprivation is not new, but has been on the agenda in poverty research since the late 1970s at least, particularly in the Ireland, the United Kingdom and the United States [@townsend_poverty_1979;@mack_poor_1985:@nolan_resources_1996]. According to this approach the focus of analysis is not income, but rather goods and services households can consume. People unable to afford certain basic items are considered to be materially deprived.  Although the conceptualization and measurement of material deprivation are by no means straightforward, there seems to be some agreement that assessments based on consumption tend to produce more reliable figures on poverty than evaluations in terms of income. For example, respondents in low income household often tend to underreport income, something that may bias poverty estimates based on income surveys. This is a issue often brought up in debates of Russian poverty, too.
+
+Although such combined strategies in the measurement of poverty may improve the validity of the findings, for example, by including only those who cannot consume for financial reasons, the results may be problematic to interpret from a policy perspective. One reason is that public programs may have different effects on income and consumption. Thus, there is an important policy dimension to poverty measurement, which has not yet been sufficiently recognized in the literature. Whereas the income approach to poverty measurement implicitly links social stratification to equality of opportunity, the strategy to focus on consumption and material deprivation concerns more equality of outcomes [@ringen1988direct].
+
+Favourable economic conditions have improved the financial situation both the Russian state and the Russian households. Some major trends can are illustrated in figure 1. Despite the economic recovery from 1998 crisis the outcomes in indicators of household well-being are somewhat modest. Average wages seem to have increased relatively more rapidly than for example pensions or the level of subsistence minimum.
+
+![Development of average wages, average pension, minimun wage and subsistence minimum in 2000 - 2011 (roubles per month) (Source: Rosstat 2012)](figure/macroplot.pdf)
+
+
+\newpage
+
+# Research design
+
+This research aims at finding whether MCP benefit schemes are able to meet the households with multiple deprivations and how the performance has changed over time. The research problem can be broken down into three research questions:
+
+1. What are the trends and how is the regional variation in multidimensional poverty in the Russian Federation?
+2. What is the coverage and targeting performance of MCP benefits at households with multiple deprivations?
+3. How has the impact changed over time?
+
+## Data
+
+Research setting is cross-sectional at the household level covering years from 2000 to 2011 and utilizes the *RLMS-HSE* data from rounds 9 to 20. Analysis use the full sample household data with survey weights. The monetization reform was implemented in 2005, but here the analysis is stretched back to 2000 for better picture of long-term trends in poverty. The latest round available is 20 from 2011. The number of household on each round varies from 4006 in 2000 to 8159 in 2011. Data is collected from 38 regions of Russia.
+
+
+## Methods 
+
+To answer the research questions the analysis asks for two types of methods:
+
+1. The poor households have to be identified and poverty measures aggregated. 
+2. The targeting performance of social assistance benefits estimated at these poverty measures. 
+
+### Identifying the poor households in each dimension
+
+Identification of poor households is done using measures of income, consumption deprivation and material deprivation. **Income poor** households are identified using [Rosstat subsistence minimum threshold for total population](http://www.gks.ru/bgd/regl/b12_12/IssWWW.exe/stg/d01/07-11.htm). Equivalized household income is used where the household income (*f14*) is divided by the square root of household size. Households with equivalized income below the subsistence minimum for total population are qualified as poor. 
+
+Measure of **material deprivation** is constructed from five variables indicating lack of
+
+1. television (c9.5.1a/c9.5.1b)
+2. tap water (c7.2)
+3. hot water (c7.3)
+4. sewage (c7.5)
+5. computer (c9.621a/c9.622a)
+
+Household is categorized as **consumption poor** if they unvoluntarily lack three or more of these items. 
+
+Household is defined as consumption poor if a member of household haven't been able to use one or more of the following services due to lack of money:
+
+1. outpatient care (f16.1)
+2. hospital care (f16.2)
+3. dental care (f16.3)
+4. buy necessary medicine (f16.4)
+
+
+### Aggregating the poverty measure
+
+In resulting dataset each household have either 1 or 0 for each of three deprivations. Households deprived in more than one dimension are identified using simple Boolean algebra resulting variable of **joint distribution of deprivation**. As the dimensions are different adding them up in any other way is not advisable. One can say that an individual deprived in terms of income and material durables is more deprived than income poor only, but one cannot compare with someone deprived in terms of consumption and material deprivation. This measure does not give satisfying answer to a question how deprived individual is. Each dimensions is 1 or 0 and severity of deprivation is therefore not captured.
+
+One way presenting of such data is trough a Venn diagrams as proposed by [@ferreira_multidimensional_2012] and applied by [p. 127,@atkinson_income_2010] in very similar context as here. Venn-diagrams are well-suited for cross-sectional, static representation of data, but not suitable for presenting change over several points in time as in this setting. However, I have used Venn diagram in figure 8 to illustrate six main subgroups of poor formed by three overlapping indicators. Analysis later on will be based on this framework.
+
+![Dimensions of deprivation](abstract/figure/venn_rlms.pdf)
+
+Multidimensional poverty measure used here is a *composite indice* of set of sub-indicators measuring deprivation in terms of *income*, *consumption* and *material living conditions* as illustrated in figure 5 above. Simple Boolean algebra is used to determine the conjunction or overlap between dimensions. Methodology for coverage, leakage and targeting performance is built on common methodology in development economics [primarily, @coady_targeting_2004] and is applied here in multidimensional setting.
+
+Analysis are done with R using packages *survey* [@survey_2012], *laeken* [@laeken_2012] and *ggplot2* [@ggplot_2009]. Reproducible R-code for the analysis can be found at: [https://github.com/muuankarski/monetisation](https://github.com/muuankarski/monetisation)
+
+
+### Assessing the targeting performance of social assistance
+
+**Coverage**
+
+Targeting performance of MCP benefits is analysed through coverage, targeting errors and Coady-Grosh-Hoddinot indicator of targeting performance. All measures are calculated for each individual subindicators and for all six subgroups. As the income poverty rates is very low in the recent rounds and very few households are suffering from all three deprivations, I have pooled the households with two or three deprivations for some analysis for larger N and more robust results.
+
+Coverage rates are calculated as follows, where $N_{p,1}$ is the number of poor households in the program and $N_p$ is the total number of poor households.
+
+$C = \frac{N_{p,1}}{N_i}$
+
+Two types of targeting errors are calculated for all groups. Type I errors, errors of inclusion, happen when non-poor households are included in the program due to inaccurate eligibility specification, incentive effective effects, elite capture etc. Type 1 error is also known as leakage. Type II errors, errors of exclusion, takes place when the poor are excluded from program benefits due to budgetary limitations, geographical delimitations of program scope, lack of outreach to inform the poor of a program, etc.
+
+**Leakage**
+
+A common approach to evaluate the targeting performance of means tested transfer instruments is to compare leakage (Type 1 error) and undercoverage (Type 2 error) rates. Leakage is the proportion of those households reached by the program (i.e., are “in” denoted by i, as opposed to “out of,” denoted by o, the program) who are classified as nonpoor (errors of inclusion) or 
+
+$L = \frac{N_{np,i}}{N_i}$
+
+where $N_{np,i}$ is the number of nonpoor individuals in the program and $N_i$ is the total number of individuals in the program.
+
+Undercoverage is the proportion of poor individuals who are not included in the program (errors of exclusion), 
+
+$UC = \frac{N_{p,0}}{N_p}$
+
+where $N_{p,o}$ is the number of poor individuals who are left out of the program and $N_p$ is the total number of poor individuals.
+
+Targeting differential is the coverage of the poor minus leakage
+
+$TD = C - L$
+
+**Targeting**
+
+Both the coverage and targeting errors are "either or" type of measures of extend of the program and not captivating the generosity or the value of the benefit. To find out if the benefit rates are higher for deprived than for non-deprived a so called *Coady-Grosh-Hoddinot indicator* is applied. Measure is based on a comparison of actual performance to a common reference outcome, namely, the outcome that would result from neutral (as opposed to progressive or regressive) targeting. A neutral targeting outcome means that both the poor and the non-poor household receives equal share (relative to group size) the transfer budget. A universal program in which all households receive identifical benefit would targeting neutral. 
+
+The indicator used in this analysis is constructed by dividing the actual outcome by the appropriate neutral outcome. For example, if the 40 \% of the households qualifies as poor and they receive 60 percent of the benefits, then the indicator of performance is calculated as (60/40) = 1.5. A higher value is associated with better targeting performance. A value of 1.5 means that targeting has led to the target group (here the poor households) receiving 50 percent more than they would have received under a universal intervention. **A value greater than 1 indicates progressive targeting; less than 1, regressive targeting; and unity denotes neutral targeting.**
+
+\newpage
+
+# Results
+
+The analysis is divided in three subsections. In the first section focus is on the descriptive analysis of different dimensions of poverty. Second section introduces the monetised benefits and analyses the coverage and leakage rates in the over the time period. Third section shapes up the analysis by incorporating the value of the benefit and presents results on targeting performance using Coady-Grosh-Hoddinott indicator.
+
+## Individual dimensions of poverty
+
+Graphs on following pages illustrate the trends and spatial variations in the individual dimensions. 
+National level income poverty rates are illustrated in figure 3. A purely relative income poverty rate that follows the guidelines of European Union (poverty line at 60% of median equivalized income) is provided in the same plot for reference. Grey dashed line shows marks the year 2005 when the monetisation was implemented.
+
+![Income poverty in 2000 - 2011 (Source: RLMS-HSE)](figure/povplot.pdf)
+
+According to my formulation the income poverty rates has been in steady decline. If we look at the relative poverty rate that has remained somewhat at the same level, we may conclude that the poverty reduction is due to lower growth in subsistence minimun level rather than more equal income redistribution.
+
+Figure 4 shows the population shares of materially deprived households. Lines represent population shares of households lacking one of individual items and the joint indicator of lacking three or more items. Possession rates of households durables (computer & tv) have declined in faster pace than items related to housing.
+
+![Material deprivation in 2000 - 2011. Individual items in colors and joint indicator in black. (Source: RLMS-HSE)](figure/materplot.pdf)
+
+Positive thrends can also be seen in consumption deprivation. Each of the consumption deficiences have been steadily disappearing. Interestingly, there seems to be significant shift around year 2005 only regard to consumption deprivation. All four of the indicators are showing steeper decline from year 2005 to 2005. 
+
+![Consumption deprivation in 2000 - 2011. Individual items in colors and joint indicator in black. (Source: RLMS-HSE)](figure/consplot.pdf)
+
+Figures 6,7 and 8 present the lates figures from 2011 in all individual dimensions on a map. Regional variation is substantial in each of the dimensions.
+
+<!--
+
+![Regional income poverty rates in 2011 (Source: RLMS-HSE)](figure/mapplot1.pdf)
+
+![Regional consumption poverty rates in 2011 (Source: RLMS-HSE)](figure/mapplot2.pdf)
+
+![Regional material deprivation rates in 2011 (Source: RLMS-HSE)](figure/mapplot3.pdf)
+
+-->
+
+\newpage
+
+## Multidimensional poverty
+
+When looking at the individual and overlapping categories in figure 9 it is worth noting that all but two of the categories are in decline over time. These two categories are household that are *only materially poor* or *only consumption poor*. Such households are not income poor and there may be some other factors contributing to their deficiencies. In the case of material deprivation that may be local infrastructure that is in poor condition. In the case of consumption poverty it may be that such households have more important use for their money than health care.
+
+![Multidimensional poverty (Source: RLMS-HSE)](figure/multidimplot.pdf)
+
+
+Figure 10 illustrates the great regional differences in the poverty figures. Lines show the regional rate of households deprived in all three or at least two of the dimensions (income,consumption or material well-being)
+
+![Multidimensional poverty in regions (households with two or three deprivations pooled) (Source: RLMS-HSE)](figure/multidimplotpsu.pdf)
+
+
+
+\newpage
+
+## Targeting performance of social assistance benefits
+
+As we observed in the previous section all the indicators with few exceptions have been declining since 2000. Only the consumption dimensions seemed to have a shift simultaneously with the introduction of the MCP benefits in 2005. The other dimensions showed no sign of covariation at that point of time.
+
+Another issue is the extend and generosity of the benefit scemes. Table 1 presents the mean and median benefits sizes of MCP benefit base on RLMS-HSE data. The median value of the benefit has doubled since the introduction as has the variation.
+
+```{rtable, results='asis', echo=FALSE}
+load("~/workspace/russia/rlms/monetisation/data/mcp.RData")
+library(xtable)
+tbl <- xtable(cdata, caption="Mean and median of MCP benefit in RLMS-HSE dataset (Source: RLMS-HSE)")
+print.xtable(tbl, type="latex", include.rownames=FALSE, comment=FALSE, caption.placement="top")
+```
+
+### Coverage
+
+This section focuses on how social assistance covers the different subgroups of poor individuals. Coverage rate equals to share of MCP recipients in particular group. Figure 11 shows the coverage rates for each three individual subindicator as well for the joint indicator of the multidimensional poverty measure. There seems to be a trend of lower coverage rates for categories of "deeper" deprivation. The two categories that were showing no sign of decrease, *only consumption poor* and *only material poor*, seem to be well covered by the benefit. 
+
+The right column of each four plots presents the coverage for that particular group of poor. The blue bar with black numbers represents the particular rate of poverty/deprivation and yellow bar the coverage rate of that group as percent from 1 to 100.
+
+![Coverage rates of MCP benefit at individual and overlapping dimensions of poverty measure (Source: RLMS-HSE)](figure/covplot.pdf)
+
+<!--
+Income poverty vary only slightly between countries, but variation in coverage rates is lot higher. In each countries the coverage is higher for poor indidividuals, especially in the case UK, Romania and Germany. Rates for material deprivation vary greatly between countries with postsocialist Poland and Romania with highest rates. Social assistance cover these individuals at slightly worse rate in Romania, but better in all other countries with rates over 60 percent in UK, Denmark and Germany. Again the rates for low work intensity are consistent across the countries, but the coverage rates vary greatly. Social assistance in UK covers over three fourths of the jobless individuals that consist 9.8 percent of the population. Rate of joblessness is similar in Italy, but the social assistance covers only 9.9 percent of the deprived. The joint indicator smoothens the variation in both respect, leaving the UK and Germany with highest and Italy and Poland with lowest coverage rates but with equally high rates of at risk of poverty and social exclusion.
+-->
+
+The same information is illustrated as population shares in figure 12 showing the poverty rates and rate of covered poor for three of the individual dimensions as well as for the household deprived in terms of all three. While each of the indicator is showing declining levels of poverty, declining is also the coverage. This indicates that the benefit is being paid for same households and as they move out of poverty they also take their benefit out from the poor. Material poverty is a different case as the rate of covered poor remains the same while the rate of poor households is declining. That indicates that the households escaping poverty are not the ones receiving the monetised benefit.
+
+![Rates of poor households and rates of poor households covered by MCP benefits in three individual dimensions and the joint dimension (Source: RLMS-HSE)](figure/coverageplot.pdf)
+
+<!-- A vague and expected trend can be seen where the coverage rate is increasing with the severity of deprivation, meaning that coverage rates are higher for individual with multiple deprivations. A prime examples of that are Germany, Romania and UK. As for the group h, individuals deprived in all dimensions, the coverage rates climb up to 82 and 94 percents in Germany and UK, respectively. The population share of this group is small in all countries, varying from 0.5 percent in Denmark to 2.2 in Romania. The poor performance of Italian social assistance benefits becomes more evident in this setting. -->
+
+<!--
+
+![Coverage3 (Source: RLMS-HSE)](figure/coverageplot2.pdf)
+
+-->
+
+Variation between regions is also great in this respect. Figures 13 illustrates the median MCP benefit size in 2011 and 14 the coverage rate from same year. There is a tendency of regions with higher coverage rate also to higher median benefit levels. Figure 15 looks the relationship more closely by each year and clearly indicates that there are great regional differences in the payment of MCP and obviously in the implementation of the reform.
+
+<!--
+![Median MCP benefit levels by regions in 2011 (Source: RLMS-HSE)](figure/mapplotben.pdf)
+
+![Coverage rates of MCP benefit by regions in 2011 (Source: RLMS-HSE)](figure/mapplotcov.pdf)
+-->
+
+
+![Coverage rate vs. median benefit level of MCP by regions in 2005 to 2011 (Source: RLMS-HSE)](figure/covbenplot.pdf)
+
+
+### Targeting Errors
+
+One side of targeting performance of cash benefits are the targeing errors. Table 2 presents the type 1 errors (leakage) for each year. Trend is clear: almost two thirds of the recipients are non-poor households. Table 3 lists the coverage rates, type 2 errors (undercoverage) and targeting differentials (coverage minus leakage) for each poverty subgroup. The lower the both errors are the better (pro-poor) targeting is, as opposed to targeting differential, in which higher value indicates better targeting. Targeting is very poor at most of subgroups though the two groups, *only materially poor* and *only consumption poor*, stand out again. Despite the stagnated poverty levels, both groups seems to enjoy the benefit at substantially higher level that is improving over time.
+
+
+```{rtable1, results='asis', echo=FALSE}
+load("~/workspace/russia/rlms/monetisation/data/error1.RData")
+library(xtable)
+tbl <- xtable(df.error1, caption="Type 1 error (leakage) of MCP (Source: RLMS-HSE)", digits=1)
+print.xtable(tbl, type="latex", include.rownames=FALSE, comment=FALSE, caption.placement="top")
+```
+
+```{rtable2, results='asis', echo=FALSE}
+load("~/workspace/russia/rlms/monetisation/data/error2.RData")
+library(xtable)
+tbl <- xtable(df.error2.w, caption="Coverage, type 2 error (targeting error) and targeting differentials of MCP benefits (Source: RLMS-HSE)", digits=1)
+print.xtable(tbl, type="latex", include.rownames=FALSE, comment=FALSE, caption.placement="top")
+```
+
+\newpage
+
+**Targeting performance**
+
+In the final section of analysis the Coady-Grosh-Hoddinot indicator will be used to shed more light into capacity of benefit scheme to reduce poverty by taking the value of the transfers into account. Indicator used here is explained in detail in section 4, but to summarize it, a value greater than 1 indicates progressive targeting, whereas value less than 1 means regressive targeting. Value of 1 denotes neutral targeting [@coady_targeting_2004]
+
+![Coady-Grosh-Hoddinott indicator of targeting performance of MCP benefits on multidimensional poverty. Source: RLMS-HSE](figure/cghplot.pdf)
+
+Figure 16 presents the values of Coady-Grosh-Hoddinot indicator for for each three individual subindicator as well for the joint indicator of multidimensional poverty where households deprived in terms of two or all three dimensions are pooled together.
+
+When the value of benefit is considered the overall picture looks as negative as when analysing only *either-or* -type of measures as targeting errors or coverage rates. MCP seem to deliver less generous benefits especially for income poor households and also for households deprived in two or more dimensions (green line). On contrary the materially poor households receive a relatively more benefits than the non-poor as is the case with consumption poor households, at least in most of the years. However, the figures are very low for all the categories of poor households.
+
+# Conclusions
+
+The aim of the paper was to analyse to what extend monetisation reform has improved the capacity of Russian welfare state to fulfil its modern tasks of redistribution of income and reduction of poverty. The analysis conducted on MCP benefit indicate that despite the good progress in poverty reduction in general, very little of that can be linked to introduction and broadening of MCP benefits. With the operationalisation used in this analysis indicats that, for the most part, the benefits are being paid for the same households over time, and while the poverty levels decreases, a originally pro-poor benefit becomes regressive over time. To be able to say more about the selection behaviour of the benefit one should analyze it using a panel setting.
+
+<!-- 
+>When looking at the overlap of subindicators it is clear that each of these indicators are equally apart from each other and the overlap is only modest. Low work intensity is not more self-contained than material deprivation. The relative share of dimensions varies especially between old and new member states: material deprivation is higher and low work intensity lower in Romania and Poland than in their Western counterparts. However, when looking at the absolute figures one can say that the population size dictates. Highest number of poor are living in the most populous member countries, which was certainly know when setting up the target of 20 million.
+
+Despite the independence of these dimensions of poverty the social assistance is treating them relatively equally. Main variation is found between countries than between poverty subgroups, but this calls for more precise explorative analysis. When looking at Coady-Grosh-Hoddinott indicator the individual deprived in terms of low work intensity are actually benefiting more from the social assistance than income poor in all old member states. 
+-->
+
+This analysis suggests that the aim of the monetisation reform to improve the targeting and poverty reduction impact of the benefit is not met very well and with the current scheme it wont be achieved any time soon. Reduction of poverty is due to other factor as general growth of living standards through economic recovery. 
+
+<!--
+policies that are directed exclusively towards one of the indicators may fail to reduce the degree of deprivation of a large proportion of individuals. From the policy perspective it is important to monitor all the three indicators, but equally important is to pay attention the degree of overlap as it will also help shape policies to address these particular shortfalls.
+-->
+
+There are several aspects in which the analysis should be developed and re-arranged. The adoption of multidimensional poverty is step to the right direction but at its current form lacking both theoretical and methodological grounding and reasoning. However, even these results provide new insight into poverty reduction capacity of social cash benefits and provide new analytical tools for studying the interplay between welfare provision and poverty outcomes in complex welfare systems as in Russian Federation. This can be useful in analysing the development of Russian welfare state as well as in shaping policies to address possible shortfalls.
+
+# References
+
+
+
+
+
+
