@@ -7,7 +7,7 @@
 setwd("~/workspace/russia/rlms/monetisation")
 library(knitr)
 knit("article.Rmd")
-system("pandoc article.md -o article.pdf --bibliography=bibtex.bib --number-sections --latexmathml --variable=geometry:a4paper")
+system("pandoc article.md --template=../../../template/pandoc_article/tex_templates/pandoc.latex.template --bibliography=bibtex.bib --number-sections --latexmathml -V lang=english -V papersize:a4paper -V documentclass=scrartcl --latex-engine=xelatex -o article.pdf")
 
 
 library(kaRski)
@@ -71,14 +71,17 @@ Irina Sinitsina's review of studies on implementation of monetization reform pro
 
 In summarizing the aims and motives of the monetization reforms she comes up with three rationales behind the reform [@sinitsina_experience_2009]. Firstly, there was financial burden in the form of unfunded mandates in benefit systems. This was the case especially with different veteran priviledges that amounted more than ten times the financial costs of targereted social assistance programs and covered roughly 70 percent of the population. Welfare systems was not able to fulfil these mandates resulting a great share of population unable to access the benefit they were entitled to [@alexandrova_reform_2007]. Second, the poor targeting of priviledges in the with high poverty rates and growing inequality had resulted in social rationale for reforming the system. Allocation of in-kind benefits was based on categories, but there was no category for poor households/individuals. The social security system as whole was regressive with less than 10 percent of the resources means tested.
 
-Table: Prevalence of benefits among poor and non-poor families, percent of poor and non-poor households.
+Table: Prevalence of benefits among poor and non-poor families - percent of poor and non-poor households.
 
-
+-------------------------------------------------------
 Types of benefits                                     Poor households Non-poor households
 -----------------                                     --------------- -------------------
 Benefits for housing, communal services and utilities 28.2 %          49.5 %
 Benefits for health services and medicines            11.7 %          21.3 %
 Benefits for transportation                           24.2 %          47.5 %
+-------------------------------------------------------
+
+
 
 *source: [@ovcharova_sotsialnye_2005] based on NOBUS data (2003)*
 

@@ -4,7 +4,7 @@
 
 
 ```{rincomecomparecompopts, echo=FALSE}
-opts_chunk$set(echo=TRUE, dev='png', eval=TRUE, cache=FALSE, fig.height=8, fig.width=12, message=FALSE, warning=FALSE)
+opts_chunk$set(echo=TRUE, dev='png', eval=TRUE, cache=TRUE, fig.height=8, fig.width=12, message=FALSE, warning=FALSE)
 ```
 
 
